@@ -1,8 +1,6 @@
 import { Options, PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { Post } from "./entities/post.entity";
-import { Migrator } from "@mikro-orm/migrations";
 import { isDev } from "./constants";
-import path from "path";
 
 // TODO: debug DB_PASSWORD=undefined
 // const dbPassword = process.env.DB_PASSWORD;
@@ -19,7 +17,6 @@ const config: Options = {
   entities: [Post],
   dbName: "reddit-clone",
   driver: PostgreSqlDriver,
-  extensions: [Migrator],
   password: "postgres",
   debug: isDev,
 };

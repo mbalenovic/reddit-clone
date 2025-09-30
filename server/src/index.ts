@@ -5,9 +5,10 @@ import config from "./mikro-orm.config";
 
 async function main() {
   const orm = await MikroORM.init(config);
+  await orm.getMigrator().up();
   const emFork = orm.em.fork() as EntityManager;
 
-  const post = emFork.create(Post, { title: "new post" });
+  const post = emFork.create(Post, { title: "new post 3" });
   await emFork.persistAndFlush(post);
 }
 
