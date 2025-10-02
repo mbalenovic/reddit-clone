@@ -6,11 +6,13 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "dev": "nodemon dist/src/index.js"
+    "dev": "nodemon dist/src/index.js",
+    "create:migration": "mikro-orm migration:create"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/express-session": "^1.18.2",
     "ts-node": "^10.9.2"
   },
   "dependencies": {
@@ -21,12 +23,17 @@
     "@mikro-orm/migrations": "^6.5.6",
     "@mikro-orm/postgresql": "^6.5.6",
     "@mikro-orm/reflection": "^6.5.6",
+    "argon2": "^0.44.0",
+    "class-validator": "^0.14.2",
+    "connect-redis": "^9.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "express-session": "^1.18.2",
     "graphql": "^16.11.0",
     "graphql-scalars": "^1.24.2",
     "pg": "^8.16.3",
+    "redis": "^5.8.3",
     "type-graphql": "2.0.0-rc.2"
   },
   "mikro-orm": {
