@@ -49,6 +49,13 @@ async function main() {
   await apolloServer.start();
 
   app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
+
+  app.use(
     "/",
     session({
       name: "qid",
@@ -63,7 +70,6 @@ async function main() {
         sameSite: "lax",
       },
     }),
-    cors<cors.CorsRequest>(),
     express.json(),
     expressMiddleware(apolloServer, {
       context: async ({ req, res }) => ({ em: orm.em.fork(), req, res }),
