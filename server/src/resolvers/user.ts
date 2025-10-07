@@ -4,7 +4,6 @@ import { User } from "../entities/user.entity";
 import argon2 from "argon2";
 import { UserResponse } from "../types/UserResponse";
 import { UserInput } from "../types/UserInput";
-import { UniqueConstraintViolationException } from "@mikro-orm/core";
 
 @Resolver()
 export class UserResolver {
@@ -31,13 +30,15 @@ export class UserResolver {
       };
     }
 
-    const user = em.create(User, userInput);
-
+    let user;
     try {
-      await em.persistAndFlush(user);
+      const createUserQuery = em
+        .createQueryBuilder(User)
+        .insert({ ...userInput, createdAt: new Date(), updatedAt: new Date() })
+        .returning("*");
+      user = await createUserQuery.execute("get");
     } catch (error) {
-      //   key already exists
-      if (error instanceof UniqueConstraintViolationException) {
+      if (error instanceof Error && "code" in error && error.code === "23505") {
         return {
           errors: [
             {
