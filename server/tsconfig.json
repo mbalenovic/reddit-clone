@@ -32,6 +32,10 @@
     // "noFallthroughCasesInSwitch": true,
     // "noPropertyAccessFromIndexSignature": true,
 
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
     // Recommended Options
     "strict": true,
     "jsx": "react-jsx",
