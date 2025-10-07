@@ -21,7 +21,9 @@ function RouteComponent() {
     const password = formData.get("password") as string;
 
     try {
-      const response = await login({ variables: { username, password } });
+      const response = await login({
+        variables: { userInput: { username, password } },
+      });
 
       console.log(response.data?.login.errors);
 
