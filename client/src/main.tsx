@@ -7,11 +7,15 @@ import { routeTree } from "./routeTree.gen";
 
 import "./styles.css";
 import reportWebVitals from "./reportWebVitals.ts";
+import { AuthProvider, useAuth } from "./auth.tsx";
+import { ApolloProvider } from "@apollo/client/react";
+import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  context: {},
+  // auth will be passed down from App component
+  context: { auth: undefined! },
   defaultPreload: "intent",
   scrollRestoration: true,
   defaultStructuralSharing: true,
@@ -25,13 +29,37 @@ declare module "@tanstack/react-router" {
   }
 }
 
+function InnerApp() {
+  const auth = useAuth();
+  return <RouterProvider router={router} context={{ auth }} />;
+}
+
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: "http://localhost:4000/graphql",
+    credentials: "include",
+  }),
+  cache: new InMemoryCache(),
+});
+
+function App() {
+  return (
+    <ApolloProvider client={client}>
+      <AuthProvider>
+        <InnerApp />
+      </AuthProvider>
+    </ApolloProvider>
+  );
+}
+
 // Render the app
 const rootElement = document.getElementById("app");
 if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
+
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <App />
     </StrictMode>
   );
 }

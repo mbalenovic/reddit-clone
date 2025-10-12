@@ -1,13 +1,20 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/signup")({
   component: RouteComponent,
+  beforeLoad: ({ context }) => {
+    // Redirect if already authenticated
+    if (context.auth.isAuthenticated) {
+      throw redirect({ to: "/" });
+    }
+  },
 });
 
 import { CombinedGraphQLErrors } from "@apollo/client";
 import { useRegisterMutation } from "@/graphql/mutations/useRegisterMutation";
 import { useState } from "react";
 import { FieldError } from "@/gql/graphql";
+import { Route as IndexRoute } from "./_auth.index";
 
 function RouteComponent() {
   const [errors, setErrors] = useState<FieldError[]>([]);
@@ -29,7 +36,7 @@ function RouteComponent() {
       if (response.data?.register.errors) {
         setErrors(response.data?.register.errors);
       } else {
-        navigate({ to: "/" });
+        navigate({ to: IndexRoute.to });
       }
     } catch (error) {
       // TODO: validation error

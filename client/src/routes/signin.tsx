@@ -1,17 +1,24 @@
 import { FieldError } from "@/gql/graphql";
-import { useLoginMutation } from "@/graphql/mutations/useLoginMutation";
 import { CombinedGraphQLErrors } from "@apollo/client";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { Route as IndexRoute } from "./_auth.index";
 
 export const Route = createFileRoute("/signin")({
   component: RouteComponent,
+  beforeLoad: ({ context }) => {
+    // Redirect if already authenticated
+    if (context.auth.isAuthenticated) {
+      throw redirect({ to: "/" });
+    }
+  },
 });
 
 function RouteComponent() {
   const [errors, setErrors] = useState<FieldError[]>([]);
-  const [login, { data, loading }] = useLoginMutation();
   const navigate = useNavigate({ from: "/signin" });
+  const [isLoading, setIsLoading] = useState(false);
+  const { auth } = Route.useRouteContext();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,22 +28,23 @@ function RouteComponent() {
     const password = formData.get("password") as string;
 
     try {
-      const response = await login({
-        variables: { userInput: { username, password } },
-      });
-
-      console.log(response.data?.login.errors);
+      setIsLoading(true);
+      const response = await auth.login(username, password);
 
       if (response.data?.login.errors) {
         setErrors(response.data.login.errors);
       } else {
-        navigate({ to: "/" });
+        if (response.data?.login.user) {
+          navigate({ to: IndexRoute.to });
+        }
       }
     } catch (error) {
       // TODO: validation error
       if (CombinedGraphQLErrors.is(error)) {
-        console.log(data, error?.errors[0]);
+        console.log(error?.errors[0]);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,7 +87,7 @@ function RouteComponent() {
         <div className="flex justify-center mt-4">
           <input
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             value="Sign In"
             className="bg-red-300 p-1 px-3 rounded-sm"
           />
