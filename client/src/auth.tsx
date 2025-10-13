@@ -4,6 +4,7 @@ import { useLoginMutation } from "./graphql/mutations/useLoginMutation";
 import { AuthState } from "./types/AuthState";
 import { redirect } from "@tanstack/react-router";
 import { Route as SigninRoute } from "./routes/signin";
+import { useLogoutMutation } from "./graphql/mutations/useLogoutMutation";
 
 const AuthContext = createContext<AuthState | undefined>(undefined);
 
@@ -12,6 +13,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [loginUser] = useLoginMutation();
+  const [logoutUser] = useLogoutMutation();
 
   // Restore auth state on app load
   useEffect(() => {
@@ -80,10 +82,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return response;
   };
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
     setIsAuthenticated(false);
-    // TODO: add logout on server and delete cookies
+
+    await logoutUser();
   };
 
   return (

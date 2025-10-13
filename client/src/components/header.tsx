@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Route as SigninRoute } from "../routes/signin";
 import { Route as SignupRoute } from "../routes/signup";
 import { useAuth } from "@/auth";
@@ -13,6 +13,12 @@ import {
 
 const Header = () => {
   const auth = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    await auth.logout();
+    navigate({ to: "/" });
+  }
 
   return (
     <div className="flex justify-end">
@@ -20,11 +26,14 @@ const Header = () => {
         <DropdownMenu>
           <DropdownMenuTrigger className="p-4">
             {auth.user?.username}
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          </DropdownMenuTrigger>{" "}
+          <DropdownMenuContent
+            className="p-4 bg-popover text-popover-foreground border border-border rounded-md shadow-md"
+            align="end"
+          >
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (

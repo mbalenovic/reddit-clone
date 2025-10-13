@@ -84,10 +84,18 @@
 - **45m (3:24:35)**:
 - Read about authentication [TanStack](https://tanstack.com/router/v1/docs/framework/react/how-to/setup-authentication)
 
-#### October 11
+#### October 12
 
 - **2h45m (3:38:43)**:
 - Set the authentication
+
+#### October 13
+
+- **3h (3:54:53)**:
+- Types missing when using Fragments. Codegen.ts was configured to scan .tsx only, and Fragment was .ts.
+- Backend logout done with clearing cookie and deleting session
+- Removed fragment masking in Codegen.ts
+- Stuck a bit on calling navigate/redirect in auth.logout, but it's outside the router context
 
 ### Integration Notes
 

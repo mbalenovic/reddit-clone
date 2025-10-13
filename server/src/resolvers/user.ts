@@ -87,4 +87,20 @@ export class UserResolver {
     req.session.userId = user.id;
     return { user };
   }
+
+  @Mutation(() => Boolean)
+  async logout(@Ctx() { req, res }: Context) {
+    res.clearCookie("qid");
+
+    return new Promise((res) =>
+      req.session.destroy((err) => {
+        if (err) {
+          res(false);
+          return;
+        }
+
+        res(true);
+      })
+    );
+  }
 }
