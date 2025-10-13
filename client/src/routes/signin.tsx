@@ -2,7 +2,7 @@ import { FieldError } from "@/gql/graphql";
 import { CombinedGraphQLErrors } from "@apollo/client";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Route as IndexRoute } from "./_auth.index";
+import { Route as IndexRoute } from "./_auth/index";
 
 export const Route = createFileRoute("/signin")({
   component: RouteComponent,

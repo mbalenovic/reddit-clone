@@ -12,7 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SigninRouteImport } from './routes/signin'
 import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as AuthIndexRouteImport } from './routes/_auth.index'
+import { Route as AuthIndexRouteImport } from './routes/_auth/index'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',

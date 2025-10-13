@@ -1,4 +1,9 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { CombinedGraphQLErrors } from "@apollo/client";
+import { useRegisterMutation } from "@/graphql/mutations/useRegisterMutation";
+import { useState } from "react";
+import { FieldError } from "@/gql/graphql";
+import { Route as IndexRoute } from "./_auth/index";
 
 export const Route = createFileRoute("/signup")({
   component: RouteComponent,
@@ -9,12 +14,6 @@ export const Route = createFileRoute("/signup")({
     }
   },
 });
-
-import { CombinedGraphQLErrors } from "@apollo/client";
-import { useRegisterMutation } from "@/graphql/mutations/useRegisterMutation";
-import { useState } from "react";
-import { FieldError } from "@/gql/graphql";
-import { Route as IndexRoute } from "./_auth.index";
 
 function RouteComponent() {
   const [errors, setErrors] = useState<FieldError[]>([]);

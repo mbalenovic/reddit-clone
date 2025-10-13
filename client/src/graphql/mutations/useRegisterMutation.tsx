@@ -9,10 +9,7 @@ const REGISTER = graphql(`
         message
       }
       user {
-        id
-        createdAt
-        updatedAt
-        username
+        ...UserFragment
       }
     }
   }
