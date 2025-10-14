@@ -97,6 +97,13 @@
 - Removed fragment masking in Codegen.ts
 - Stuck a bit on calling navigate/redirect in auth.logout, but it's outside the router context
 
+#### October 14
+
+- **1.5h (4:18:29)**:
+- Right click -> View Page Source to examin the page for SEO
+- We can know if we're on the server if the window object is undefined
+- Nodemailer for emails
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).

@@ -1,20 +1,20 @@
-import { MikroORM } from "@mikro-orm/core";
-import config from "./mikro-orm.config";
-import express from "express";
 import { ApolloServer } from "@apollo/server";
-import http from "http";
-import cors from "cors";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { expressMiddleware } from "@as-integrations/express5";
-import { buildSchema } from "type-graphql";
-import { PostResolver } from "./resolvers/post";
-import path from "path";
-import { Context } from "./types/context.type";
-import { UserResolver } from "./resolvers/user";
-import { isDev } from "./constants";
+import { MikroORM } from "@mikro-orm/core";
 import { RedisStore } from "connect-redis";
+import cors from "cors";
+import express from "express";
 import session from "express-session";
+import http from "http";
+import path from "path";
 import { createClient } from "redis";
+import { buildSchema } from "type-graphql";
+import { isDev } from "./constants";
+import config from "./mikro-orm.config";
+import { PostResolver } from "./resolvers/post";
+import { UserResolver } from "./resolvers/user";
+import { Context } from "./types/context.type";
 
 async function main() {
   const orm = await MikroORM.init(config);
