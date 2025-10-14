@@ -19,6 +19,7 @@ type Documents = {
     "\n  mutation Logout {\n    logout\n  }\n": typeof types.LogoutDocument,
     "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": typeof types.RegisterDocument,
     "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n": typeof types.QueryDocument,
+    "\n  query Posts {\n    posts {\n      id\n      createdAt\n      updatedAt\n      title\n    }\n  }\n": typeof types.PostsDocument,
 };
 const documents: Documents = {
     "\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n  }\n": types.UserFragmentFragmentDoc,
@@ -26,6 +27,7 @@ const documents: Documents = {
     "\n  mutation Logout {\n    logout\n  }\n": types.LogoutDocument,
     "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": types.RegisterDocument,
     "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n": types.QueryDocument,
+    "\n  query Posts {\n    posts {\n      id\n      createdAt\n      updatedAt\n      title\n    }\n  }\n": types.PostsDocument,
 };
 
 /**
@@ -62,6 +64,10 @@ export function graphql(source: "\n  mutation Register($userInput: UserInput!) {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n"): (typeof documents)["\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query Posts {\n    posts {\n      id\n      createdAt\n      updatedAt\n      title\n    }\n  }\n"): (typeof documents)["\n  query Posts {\n    posts {\n      id\n      createdAt\n      updatedAt\n      title\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
