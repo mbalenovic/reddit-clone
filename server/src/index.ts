@@ -72,7 +72,12 @@ async function main() {
     }),
     express.json(),
     expressMiddleware(apolloServer, {
-      context: async ({ req, res }) => ({ em: orm.em.fork(), req, res }),
+      context: async ({ req, res }) => ({
+        em: orm.em.fork(),
+        req,
+        res,
+        redisStore,
+      }),
     })
   );
 

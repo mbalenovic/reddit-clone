@@ -1,8 +1,14 @@
 import { FieldError } from "@/gql/graphql";
 import { CombinedGraphQLErrors } from "@apollo/client";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from "@tanstack/react-router";
 import { useState } from "react";
 import { Route as IndexRoute } from "./_auth/index";
+import { Route as PasswordRecoveryRoute } from "./password-recovery";
 
 export const Route = createFileRoute("/signin")({
   component: RouteComponent,
@@ -76,6 +82,11 @@ function RouteComponent() {
             required
             className="bg-white rounded-sm p-2"
           />
+          <div className="mt-1 flex justify-end">
+            <Link to={PasswordRecoveryRoute.to} className="text-xs">
+              Forgot password?
+            </Link>
+          </div>
         </div>
         <div className="mt-2">
           {errors.map((error) => (

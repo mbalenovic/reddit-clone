@@ -1,10 +1,12 @@
 import argon2 from "argon2";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { PASSWORD_RECOVERY } from "../constants";
 import { User } from "../entities/user.entity";
 import { type Context } from "../types/context.type";
 import { UserInput } from "../types/UserInput";
 import { UserInputLogin } from "../types/UserInputLogin";
 import { UserResponse } from "../types/UserResponse";
+import { sendEmail } from "../utils/sendEmail";
 
 @Resolver()
 export class UserResolver {
@@ -55,14 +57,78 @@ export class UserResolver {
     return { user };
   }
 
-  @Mutation(() => UserResponse)
-  async forgotUser(
-    @Arg("userInput", () => UserInput) userInput: UserInput,
-    @Ctx() { em, req }: Context
+  @Mutation(() => Boolean)
+  async passwordRecovery(
+    @Arg("email") email: string,
+    @Ctx() { em, redisStore }: Context
   ): Promise<Boolean> {
-    // TODO; implement
+    if (!email.includes("@")) {
+      // return error
+    }
 
-    return true;
+    try {
+      const user = await em.findOne(User, { email });
+
+      if (!user) {
+        return false;
+      }
+      const token = crypto.randomUUID();
+
+      redisStore.client.set(PASSWORD_RECOVERY + token, user.id, {
+        expiration: { type: "EX", value: 1000 * 60 * 60 * 24 },
+      });
+
+      const href = `http://localhost:3000/update-password?recoveryToken=${token}`;
+
+      await sendEmail(
+        email,
+        "Password reset",
+        `<p>Reset password: <a href="${href}" target="_blank">click</a></p>`
+      );
+
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  @Mutation(() => Boolean)
+  async updatePassword(
+    @Arg("recoveryToken") recoveryToken: string,
+    @Arg("password") password: string,
+    @Ctx() { em, redisStore }: Context
+  ): Promise<Boolean> {
+    if (password.length < 5) {
+      // return error
+    }
+
+    try {
+      const userId = await redisStore.client.get(
+        PASSWORD_RECOVERY + recoveryToken
+      );
+
+      if (!userId) {
+        return false;
+      }
+
+      const user = await em.findOne(User, { id: parseInt(userId, 10) });
+
+      if (!user) {
+        return false;
+      }
+
+      const hashedPassword = await argon2.hash(password);
+
+      const ref = em.getReference(User, user.id);
+      ref.password = hashedPassword;
+      await em.flush();
+
+      await redisStore.client.del(PASSWORD_RECOVERY + recoveryToken);
+
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   @Mutation(() => UserResponse)

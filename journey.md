@@ -106,10 +106,11 @@
 
 #### October 15
 
-- **2h (4:35:31)**:
+- **5h (5:22:16)**:
 - Custom backend validation is done on InputType(), not ObjectType() - e.g. username special chars validation
 - GraphQL generates client types based on schema from the url to graphql server
--
+- Ben replaced redis with ioredis, but I'll keep connect-redis for now
+- For Redis debugging: redis-cli and run KEYS \*
 
 ### Integration Notes
 
@@ -122,3 +123,4 @@
 - [ ] Fix `.env` file to resolve `process.env.DB_PASSWORD = undefined`.
 - [ ] How to send and handle validation error messages and errors in general
 - [ ] Fix shadcn base styles/colors
+- [ ] Explore search params and dynamic routes (update-password.tsx)

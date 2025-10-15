@@ -9,11 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UpdatePasswordRouteImport } from './routes/update-password'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SigninRouteImport } from './routes/signin'
+import { Route as PasswordRecoveryRouteImport } from './routes/password-recovery'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AuthIndexRouteImport } from './routes/_auth/index'
 
+const UpdatePasswordRoute = UpdatePasswordRouteImport.update({
+  id: '/update-password',
+  path: '/update-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -22,6 +29,11 @@ const SignupRoute = SignupRouteImport.update({
 const SigninRoute = SigninRouteImport.update({
   id: '/signin',
   path: '/signin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PasswordRecoveryRoute = PasswordRecoveryRouteImport.update({
+  id: '/password-recovery',
+  path: '/password-recovery',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -35,38 +47,65 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/password-recovery': typeof PasswordRecoveryRoute
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
+  '/update-password': typeof UpdatePasswordRoute
   '/': typeof AuthIndexRoute
 }
 export interface FileRoutesByTo {
+  '/password-recovery': typeof PasswordRecoveryRoute
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
+  '/update-password': typeof UpdatePasswordRoute
   '/': typeof AuthIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
+  '/password-recovery': typeof PasswordRecoveryRoute
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
+  '/update-password': typeof UpdatePasswordRoute
   '/_auth/': typeof AuthIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/signin' | '/signup' | '/'
+  fullPaths:
+    | '/password-recovery'
+    | '/signin'
+    | '/signup'
+    | '/update-password'
+    | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/signin' | '/signup' | '/'
-  id: '__root__' | '/_auth' | '/signin' | '/signup' | '/_auth/'
+  to: '/password-recovery' | '/signin' | '/signup' | '/update-password' | '/'
+  id:
+    | '__root__'
+    | '/_auth'
+    | '/password-recovery'
+    | '/signin'
+    | '/signup'
+    | '/update-password'
+    | '/_auth/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
+  PasswordRecoveryRoute: typeof PasswordRecoveryRoute
   SigninRoute: typeof SigninRoute
   SignupRoute: typeof SignupRoute
+  UpdatePasswordRoute: typeof UpdatePasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/update-password': {
+      id: '/update-password'
+      path: '/update-password'
+      fullPath: '/update-password'
+      preLoaderRoute: typeof UpdatePasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -79,6 +118,13 @@ declare module '@tanstack/react-router' {
       path: '/signin'
       fullPath: '/signin'
       preLoaderRoute: typeof SigninRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/password-recovery': {
+      id: '/password-recovery'
+      path: '/password-recovery'
+      fullPath: '/password-recovery'
+      preLoaderRoute: typeof PasswordRecoveryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -110,8 +156,10 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
+  PasswordRecoveryRoute: PasswordRecoveryRoute,
   SigninRoute: SigninRoute,
   SignupRoute: SignupRoute,
+  UpdatePasswordRoute: UpdatePasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
