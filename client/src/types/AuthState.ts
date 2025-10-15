@@ -1,4 +1,9 @@
-import { LoginMutation, User, UserInput } from "@/gql/graphql";
+import {
+  LoginMutation,
+  RegisterMutation,
+  User,
+  UserInput,
+} from "@/gql/graphql";
 import { ApolloClient } from "@apollo/client";
 
 export interface AuthState {
@@ -8,5 +13,10 @@ export interface AuthState {
     username: UserInput["username"],
     password: UserInput["password"]
   ) => Promise<ApolloClient.MutateResult<LoginMutation>>;
+  register: (
+    username: UserInput["username"],
+    password: UserInput["password"],
+    email: UserInput["email"]
+  ) => Promise<ApolloClient.MutateResult<RegisterMutation>>;
   logout: () => void;
 }

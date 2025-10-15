@@ -2,8 +2,8 @@ import { graphql } from "@/gql";
 import { useMutation } from "@apollo/client/react";
 
 const LOGIN = graphql(`
-  mutation Login($userInput: UserInput!) {
-    login(userInput: $userInput) {
+  mutation Login($userInputLogin: UserInputLogin!) {
+    login(userInputLogin: $userInputLogin) {
       errors {
         field
         message

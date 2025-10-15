@@ -53,12 +53,12 @@ function RouteComponent() {
       <form action="" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username" className="block">
-            Username:{" "}
+            Username or email{" "}
           </label>
           <input
             type="text"
             name="username"
-            placeholder="username"
+            placeholder="username or email"
             id="username"
             required
             className="bg-white rounded-sm p-2"
@@ -66,7 +66,7 @@ function RouteComponent() {
         </div>
         <div className="mt-2">
           <label htmlFor="password" className="block">
-            Password:{" "}
+            Password
           </label>
           <input
             type="password"

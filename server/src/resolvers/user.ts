@@ -1,9 +1,10 @@
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import { type Context } from "../types/context.type";
-import { User } from "../entities/user.entity";
 import argon2 from "argon2";
-import { UserResponse } from "../types/UserResponse";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { User } from "../entities/user.entity";
+import { type Context } from "../types/context.type";
 import { UserInput } from "../types/UserInput";
+import { UserInputLogin } from "../types/UserInputLogin";
+import { UserResponse } from "../types/UserResponse";
 
 @Resolver()
 export class UserResolver {
@@ -55,23 +56,36 @@ export class UserResolver {
   }
 
   @Mutation(() => UserResponse)
-  async login(
+  async forgotUser(
     @Arg("userInput", () => UserInput) userInput: UserInput,
     @Ctx() { em, req }: Context
+  ): Promise<Boolean> {
+    // TODO; implement
+
+    return true;
+  }
+
+  @Mutation(() => UserResponse)
+  async login(
+    @Arg("userInputLogin") userInputLogin: UserInputLogin,
+    @Ctx() { em, req }: Context
   ): Promise<UserResponse> {
-    const user = await em.findOne(User, {
-      username: userInput.username,
-    });
+    const { usernameOrEmail, password } = userInputLogin;
+
+    const user = await em.findOne(
+      User,
+      usernameOrEmail.includes("@")
+        ? { email: usernameOrEmail }
+        : { username: usernameOrEmail }
+    );
 
     if (!user) {
       return {
-        errors: [
-          { field: "username", message: "That username doesn't exist." },
-        ],
+        errors: [{ field: "username", message: "That user doesn't exist." }],
       };
     }
 
-    const valid = await argon2.verify(user.password, userInput.password);
+    const valid = await argon2.verify(user.password, password);
 
     if (!valid) {
       return {

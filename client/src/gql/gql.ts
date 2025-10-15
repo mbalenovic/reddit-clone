@@ -14,16 +14,16 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n  }\n": typeof types.UserFragmentFragmentDoc,
-    "\n  mutation Login($userInput: UserInput!) {\n    login(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": typeof types.LoginDocument,
+    "\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n    email\n  }\n": typeof types.UserFragmentFragmentDoc,
+    "\n  mutation Login($userInputLogin: UserInputLogin!) {\n    login(userInputLogin: $userInputLogin) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": typeof types.LoginDocument,
     "\n  mutation Logout {\n    logout\n  }\n": typeof types.LogoutDocument,
     "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": typeof types.RegisterDocument,
     "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n": typeof types.QueryDocument,
     "\n  query Posts {\n    posts {\n      id\n      createdAt\n      updatedAt\n      title\n    }\n  }\n": typeof types.PostsDocument,
 };
 const documents: Documents = {
-    "\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n  }\n": types.UserFragmentFragmentDoc,
-    "\n  mutation Login($userInput: UserInput!) {\n    login(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": types.LoginDocument,
+    "\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n    email\n  }\n": types.UserFragmentFragmentDoc,
+    "\n  mutation Login($userInputLogin: UserInputLogin!) {\n    login(userInputLogin: $userInputLogin) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": types.LoginDocument,
     "\n  mutation Logout {\n    logout\n  }\n": types.LogoutDocument,
     "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": types.RegisterDocument,
     "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n": types.QueryDocument,
@@ -47,11 +47,11 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n  }\n"): (typeof documents)["\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n  }\n"];
+export function graphql(source: "\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n    email\n  }\n"): (typeof documents)["\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n    email\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation Login($userInput: UserInput!) {\n    login(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation Login($userInput: UserInput!) {\n    login(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  mutation Login($userInputLogin: UserInputLogin!) {\n    login(userInputLogin: $userInputLogin) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation Login($userInputLogin: UserInputLogin!) {\n    login(userInputLogin: $userInputLogin) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

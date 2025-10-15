@@ -1,6 +1,5 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { CombinedGraphQLErrors } from "@apollo/client";
-import { useRegisterMutation } from "@/graphql/mutations/useRegisterMutation";
 import { useState } from "react";
 import { FieldError } from "@/gql/graphql";
 import { Route as IndexRoute } from "./_auth/index";
@@ -16,8 +15,10 @@ export const Route = createFileRoute("/signup")({
 });
 
 function RouteComponent() {
+  const { auth } = Route.useRouteContext();
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<FieldError[]>([]);
-  const [signup, { data, loading }] = useRegisterMutation();
+
   const navigate = useNavigate({ from: "/signup" });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -25,12 +26,12 @@ function RouteComponent() {
 
     const formData = new FormData(e.currentTarget);
     const username = formData.get("username") as string;
+    const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const userInput = { username, password };
-
     try {
-      const response = await signup({ variables: { userInput } });
+      setIsLoading(true);
+      const response = await auth.register(username, password, email);
 
       if (response.data?.register.errors) {
         setErrors(response.data?.register.errors);
@@ -40,8 +41,10 @@ function RouteComponent() {
     } catch (error) {
       // TODO: validation error
       if (CombinedGraphQLErrors.is(error)) {
-        console.log(data, error?.errors[0]);
+        console.log(error?.errors[0]);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -50,7 +53,7 @@ function RouteComponent() {
       <form action="" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username" className="block">
-            Username:{" "}
+            Username
           </label>
           <input
             type="text"
@@ -62,8 +65,21 @@ function RouteComponent() {
           />
         </div>
         <div className="mt-2">
+          <label htmlFor="username" className="block">
+            Email
+          </label>
+          <input
+            type="text"
+            name="email"
+            placeholder="email"
+            id="email"
+            required
+            className="bg-white rounded-sm p-2"
+          />
+        </div>
+        <div className="mt-2">
           <label htmlFor="password" className="block">
-            Password:
+            Password
           </label>
           <input
             type="password"
@@ -84,7 +100,7 @@ function RouteComponent() {
         <div className="flex justify-center mt-4">
           <input
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             value="Register"
             className="bg-red-300 p-1 px-3 rounded-sm"
           />

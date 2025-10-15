@@ -104,6 +104,13 @@
 - We can know if we're on the server if the window object is undefined
 - Nodemailer for emails
 
+#### October 15
+
+- **2h (4:35:31)**:
+- Custom backend validation is done on InputType(), not ObjectType() - e.g. username special chars validation
+- GraphQL generates client types based on schema from the url to graphql server
+-
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).

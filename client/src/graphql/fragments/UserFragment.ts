@@ -6,5 +6,6 @@ export const UserFragment = graphql(`
     createdAt
     updatedAt
     username
+    email
   }
 `);
