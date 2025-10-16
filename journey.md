@@ -112,6 +112,12 @@
 - Ben replaced redis with ioredis, but I'll keep connect-redis for now
 - For Redis debugging: redis-cli and run KEYS \*
 
+#### October 16
+
+- **2.5h (5:50:46)**:
+- Switched to TypeORM. Updating column type could be dangerous. Some users state that migrations run DROP/CREATE column instead of MODIFY!
+- DataMapper vs ActiveRecords - DataMapper is a better fit for larger apps
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).

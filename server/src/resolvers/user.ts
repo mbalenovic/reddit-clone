@@ -11,10 +11,11 @@ import { sendEmail } from "../utils/sendEmail";
 @Resolver()
 export class UserResolver {
   @Query(() => User, { nullable: true })
-  async me(@Ctx() { em, req }: Context): Promise<User | null> {
+  async me(@Ctx() { ds, req }: Context): Promise<User | null> {
     if (!req.session.userId) return null;
 
-    const user = await em.findOne(User, { id: req.session.userId });
+    const userRepo = ds.getRepository(User);
+    const user = await userRepo.findOneBy({ id: req.session.userId });
 
     return user;
   }
@@ -22,8 +23,10 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async register(
     @Arg("userInput", () => UserInput) userInput: UserInput,
-    @Ctx() { em, req }: Context
+    @Ctx() { ds, req }: Context
   ): Promise<UserResponse> {
+    const userRepo = ds.getRepository(User);
+
     try {
       const hashedPassword = await argon2.hash(userInput.password);
       userInput.password = hashedPassword;
@@ -34,12 +37,15 @@ export class UserResolver {
     }
 
     let user;
+
     try {
-      const createUserQuery = em
-        .createQueryBuilder(User)
-        .insert({ ...userInput, createdAt: new Date(), updatedAt: new Date() })
-        .returning("*");
-      user = await createUserQuery.execute("get");
+      const newUser = new User();
+      user = await userRepo.save({
+        ...newUser,
+        ...userInput,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
     } catch (error) {
       if (error instanceof Error && "code" in error && error.code === "23505") {
         return {
@@ -53,6 +59,12 @@ export class UserResolver {
       }
     }
 
+    if (!user) {
+      return {
+        errors: [{ field: "username", message: "Registration failed." }],
+      };
+    }
+
     req.session.userId = user.id;
     return { user };
   }
@@ -60,14 +72,15 @@ export class UserResolver {
   @Mutation(() => Boolean)
   async passwordRecovery(
     @Arg("email") email: string,
-    @Ctx() { em, redisStore }: Context
+    @Ctx() { ds, redisStore }: Context
   ): Promise<Boolean> {
     if (!email.includes("@")) {
       // return error
     }
 
     try {
-      const user = await em.findOne(User, { email });
+      const userRepo = ds.getRepository(User);
+      const user = await userRepo.findOneBy({ email });
 
       if (!user) {
         return false;
@@ -96,11 +109,13 @@ export class UserResolver {
   async updatePassword(
     @Arg("recoveryToken") recoveryToken: string,
     @Arg("password") password: string,
-    @Ctx() { em, redisStore }: Context
+    @Ctx() { ds, redisStore }: Context
   ): Promise<Boolean> {
     if (password.length < 5) {
       // return error
     }
+
+    const userRepo = ds.getRepository(User);
 
     try {
       const userId = await redisStore.client.get(
@@ -111,7 +126,7 @@ export class UserResolver {
         return false;
       }
 
-      const user = await em.findOne(User, { id: parseInt(userId, 10) });
+      const user = await userRepo.findOneBy({ id: parseInt(userId, 10) });
 
       if (!user) {
         return false;
@@ -119,9 +134,8 @@ export class UserResolver {
 
       const hashedPassword = await argon2.hash(password);
 
-      const ref = em.getReference(User, user.id);
-      ref.password = hashedPassword;
-      await em.flush();
+      user.password = hashedPassword;
+      await userRepo.save(user);
 
       await redisStore.client.del(PASSWORD_RECOVERY + recoveryToken);
 
@@ -134,12 +148,13 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async login(
     @Arg("userInputLogin") userInputLogin: UserInputLogin,
-    @Ctx() { em, req }: Context
+    @Ctx() { ds, req }: Context
   ): Promise<UserResponse> {
     const { usernameOrEmail, password } = userInputLogin;
 
-    const user = await em.findOne(
-      User,
+    const userRepo = ds.getRepository(User);
+
+    const user = await userRepo.findOneBy(
       usernameOrEmail.includes("@")
         ? { email: usernameOrEmail }
         : { username: usernameOrEmail }

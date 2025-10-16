@@ -1,7 +1,6 @@
 import { ApolloServer } from "@apollo/server";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { expressMiddleware } from "@as-integrations/express5";
-import { MikroORM } from "@mikro-orm/core";
 import { RedisStore } from "connect-redis";
 import cors from "cors";
 import express from "express";
@@ -9,16 +8,23 @@ import session from "express-session";
 import http from "http";
 import path from "path";
 import { createClient } from "redis";
+import "reflect-metadata";
 import { buildSchema } from "type-graphql";
+import { DataSource } from "typeorm";
 import { isDev } from "./constants";
-import config from "./mikro-orm.config";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
+import config from "./typeorm.config";
 import { Context } from "./types/context.type";
 
 async function main() {
-  const orm = await MikroORM.init(config);
-  await orm.getMigrator().up();
+  const AppDataSource = new DataSource(config);
+
+  try {
+    await AppDataSource.initialize();
+  } catch (error) {
+    console.log(error);
+  }
 
   const app = express();
 
@@ -73,7 +79,7 @@ async function main() {
     express.json(),
     expressMiddleware(apolloServer, {
       context: async ({ req, res }) => ({
-        em: orm.em.fork(),
+        ds: AppDataSource,
         req,
         res,
         redisStore,

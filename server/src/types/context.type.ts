@@ -1,9 +1,9 @@
-import { EntityManager } from "@mikro-orm/postgresql";
 import { RedisStore } from "connect-redis";
 import { Request, Response } from "express";
+import { DataSource } from "typeorm";
 
 export interface Context {
-  em: EntityManager;
+  ds: DataSource;
   req: Request;
   res: Response;
   redisStore: RedisStore;
