@@ -85,7 +85,7 @@ export class UserResolver {
       // return error
     }
 
-    const userRepo = AppDataSource.getRepository(User);
+    const userService = new UserService(AppDataSource);
 
     try {
       const userId = await redisStore.client.get(
@@ -96,16 +96,13 @@ export class UserResolver {
         return false;
       }
 
-      const user = await userRepo.findOneBy({ id: parseInt(userId, 10) });
+      const user = await userService.findById(parseInt(userId));
 
       if (!user) {
         return false;
       }
 
-      const hashedPassword = await argon2.hash(password);
-
-      user.password = hashedPassword;
-      await userRepo.save(user);
+      await userService.updatePassword(user, password);
 
       await redisStore.client.del(PASSWORD_RECOVERY + recoveryToken);
 

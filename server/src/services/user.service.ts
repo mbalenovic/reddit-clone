@@ -54,4 +54,16 @@ export class UserService {
       }
     }
   }
+
+  async updatePassword(user: User, password: string) {
+    try {
+      const hashedPassword = await argon2.hash(password);
+      user.password = hashedPassword;
+      const updatedUser = await this.repo.save(user);
+
+      return updatedUser;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
