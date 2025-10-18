@@ -33,3 +33,7 @@ export class User {
   @Column()
   password!: string;
 }
+
+export function isUser(user: unknown): user is User {
+  return user instanceof User;
+}

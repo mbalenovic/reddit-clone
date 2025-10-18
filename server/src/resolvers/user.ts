@@ -1,7 +1,8 @@
 import argon2 from "argon2";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { PASSWORD_RECOVERY } from "../constants";
-import { User } from "../entities/user.entity";
+import { isUser, User } from "../entities/user.entity";
+import { UserService } from "../services/user.service";
 import AppDataSource from "../typeorm.config";
 import { type Context } from "../types/context.type";
 import { UserInput } from "../types/UserInput";
@@ -15,8 +16,9 @@ export class UserResolver {
   async me(@Ctx() { req }: Context): Promise<User | null> {
     if (!req.session.userId) return null;
 
-    const userRepo = AppDataSource.getRepository(User);
-    const user = await userRepo.findOneBy({ id: req.session.userId });
+    const userService = new UserService(AppDataSource);
+
+    const user = await userService.findById(req.session.userId);
 
     return user;
   }
@@ -26,48 +28,15 @@ export class UserResolver {
     @Arg("userInput", () => UserInput) userInput: UserInput,
     @Ctx() { req }: Context
   ): Promise<UserResponse> {
-    const userRepo = AppDataSource.getRepository(User);
+    const userService = new UserService(AppDataSource);
 
-    try {
-      const hashedPassword = await argon2.hash(userInput.password);
-      userInput.password = hashedPassword;
-    } catch (error) {
-      return {
-        errors: [{ field: "password", message: "Could not hash password." }],
-      };
+    const result = await userService.createUser(userInput);
+
+    if (isUser(result)) {
+      req.session.userId = result.id;
     }
 
-    let user;
-
-    try {
-      const newUser = new User();
-      user = await userRepo.save({
-        ...newUser,
-        ...userInput,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-    } catch (error) {
-      if (error instanceof Error && "code" in error && error.code === "23505") {
-        return {
-          errors: [
-            {
-              field: "username",
-              message: "The user already exists.",
-            },
-          ],
-        };
-      }
-    }
-
-    if (!user) {
-      return {
-        errors: [{ field: "username", message: "Registration failed." }],
-      };
-    }
-
-    req.session.userId = user.id;
-    return { user };
+    return result;
   }
 
   @Mutation(() => Boolean)
