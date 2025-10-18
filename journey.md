@@ -118,6 +118,33 @@
 - Switched to TypeORM. Updating column type could be dangerous. Some users state that migrations run DROP/CREATE column instead of MODIFY!
 - DataMapper vs ActiveRecords - DataMapper is a better fit for larger apps
 
+#### October 18
+
+- **1.5h (5:50:46)**:
+
+```
+export class UserService {
+  constructor(private AppDataSource: DataSource) {}
+}
+```
+
+is equivalent to
+
+```
+export class UserService {
+  private AppDataSource: DataSource;
+
+  constructor(AppDataSource: DataSource) {
+    this.AppDataSource = AppDataSource;
+  }
+}
+```
+
+- Handle errors:
+  - in a service
+  - in a resolver
+  - in a middleware
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).

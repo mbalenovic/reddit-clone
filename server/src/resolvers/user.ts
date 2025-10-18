@@ -7,17 +7,16 @@ import { type Context } from "../types/context.type";
 import { UserInput } from "../types/UserInput";
 import { UserInputLogin } from "../types/UserInputLogin";
 import { UserResponse } from "../types/UserResponse";
-import { sendEmail } from "../utils/sendEmail";
 
 @Resolver()
 export class UserResolver {
+  private userService = new UserService(AppDataSource);
+
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req }: Context): Promise<User | null> {
     if (!req.session.userId) return null;
 
-    const userService = new UserService(AppDataSource);
-
-    const user = await userService.findById(req.session.userId);
+    const user = await this.userService.findById(req.session.userId);
 
     return user;
   }
@@ -27,9 +26,7 @@ export class UserResolver {
     @Arg("userInput", () => UserInput) userInput: UserInput,
     @Ctx() { req }: Context
   ): Promise<UserResponse> {
-    const userService = new UserService(AppDataSource);
-
-    const result = await userService.createUser(userInput);
+    const result = await this.userService.createUser(userInput);
 
     if (isUser(result)) {
       req.session.userId = result.id;
@@ -45,31 +42,22 @@ export class UserResolver {
   ): Promise<Boolean> {
     if (!email.includes("@")) {
       // return error
+      return false;
     }
 
     try {
-      const userRepo = AppDataSource.getRepository(User);
-      const user = await userRepo.findOneBy({ email });
+      const user = await this.userService.findByEmail(email);
 
       if (!user) {
         return false;
       }
-      const token = crypto.randomUUID();
 
-      redisStore.client.set(PASSWORD_RECOVERY + token, user.id, {
-        expiration: { type: "EX", value: 1000 * 60 * 60 * 24 },
-      });
-
-      const href = `http://localhost:3000/update-password?recoveryToken=${token}`;
-
-      await sendEmail(
-        email,
-        "Password reset",
-        `<p>Reset password: <a href="${href}" target="_blank">click</a></p>`
-      );
+      await this.userService.sendPasswordRecovery(email, user.id, redisStore);
 
       return true;
-    } catch {
+    } catch (error) {
+      console.log("Failed to recover password.", error);
+
       return false;
     }
   }
@@ -84,8 +72,6 @@ export class UserResolver {
       // return error
     }
 
-    const userService = new UserService(AppDataSource);
-
     try {
       const userId = await redisStore.client.get(
         PASSWORD_RECOVERY + recoveryToken
@@ -95,13 +81,13 @@ export class UserResolver {
         return false;
       }
 
-      const user = await userService.findById(parseInt(userId));
+      const user = await this.userService.findById(parseInt(userId));
 
       if (!user) {
         return false;
       }
 
-      await userService.updatePassword(user, password);
+      await this.userService.updatePassword(user, password);
 
       await redisStore.client.del(PASSWORD_RECOVERY + recoveryToken);
 
@@ -118,9 +104,7 @@ export class UserResolver {
   ): Promise<UserResponse> {
     const { usernameOrEmail, password } = userInputLogin;
 
-    const userService = new UserService(AppDataSource);
-
-    const user = await userService.findByEmailOrUsername(usernameOrEmail);
+    const user = await this.userService.findByEmailOrUsername(usernameOrEmail);
 
     if (!user) {
       return {
@@ -128,7 +112,7 @@ export class UserResolver {
       };
     }
 
-    const valid = await userService.verifyPassword(user, password);
+    const valid = await this.userService.verifyPassword(user, password);
 
     if (!valid) {
       return {
