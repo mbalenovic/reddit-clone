@@ -1,32 +1,26 @@
-import { Arg, Ctx, Int, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Int, Mutation, Query, Resolver } from "type-graphql";
 import { Post } from "../entities/post.entity";
-import { type Context } from "../types/context.type";
+import AppDataSource from "../typeorm.config";
 
 @Resolver()
 export class PostResolver {
   @Query(() => Post, { nullable: true })
-  post(
-    @Arg("id", (_type) => Int) id: number,
-    @Ctx() { ds }: Context
-  ): Promise<Post | null> {
-    const postRepo = ds.getRepository(Post);
+  post(@Arg("id", (_type) => Int) id: number): Promise<Post | null> {
+    const postRepo = AppDataSource.getRepository(Post);
 
     return postRepo.findOneBy({ id });
   }
 
   @Query(() => [Post])
-  posts(@Ctx() { ds }: Context): Promise<Post[]> {
-    const postRepo = ds.getRepository(Post);
+  posts(): Promise<Post[]> {
+    const postRepo = AppDataSource.getRepository(Post);
 
     return postRepo.find();
   }
 
   @Mutation(() => Post)
-  async createPost(
-    @Arg("title", () => String) title: string,
-    @Ctx() { ds }: Context
-  ): Promise<Post> {
-    const postRepo = ds.getRepository(Post);
+  async createPost(@Arg("title", () => String) title: string): Promise<Post> {
+    const postRepo = AppDataSource.getRepository(Post);
 
     const post = new Post();
     post.title = title;
@@ -37,10 +31,9 @@ export class PostResolver {
   @Mutation(() => Post)
   async updatePost(
     @Arg("id", () => Int) id: number,
-    @Arg("title", () => String) title: string,
-    @Ctx() { ds }: Context
+    @Arg("title", () => String) title: string
   ): Promise<Post | null> {
-    const postRepo = ds.getRepository(Post);
+    const postRepo = AppDataSource.getRepository(Post);
 
     const post = await postRepo.findOneBy({ id });
     if (!post) {
@@ -56,11 +49,8 @@ export class PostResolver {
   }
 
   @Mutation(() => Number)
-  async deletePost(
-    @Arg("id", () => Int) id: number,
-    @Ctx() { ds }: Context
-  ): Promise<number> {
-    const postRepo = ds.getRepository(Post);
+  async deletePost(@Arg("id", () => Int) id: number): Promise<number> {
+    const postRepo = AppDataSource.getRepository(Post);
     const post = await postRepo.findOneBy({ id });
 
     // TODO: add better handling for post not found

@@ -10,16 +10,13 @@ import path from "path";
 import { createClient } from "redis";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
-import { DataSource } from "typeorm";
 import { isDev } from "./constants";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
-import config from "./typeorm.config";
+import AppDataSource from "./typeorm.config";
 import { Context } from "./types/context.type";
 
 async function main() {
-  const AppDataSource = new DataSource(config);
-
   try {
     await AppDataSource.initialize();
   } catch (error) {
@@ -79,7 +76,6 @@ async function main() {
     express.json(),
     expressMiddleware(apolloServer, {
       context: async ({ req, res }) => ({
-        ds: AppDataSource,
         req,
         res,
         redisStore,

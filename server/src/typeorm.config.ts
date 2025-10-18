@@ -1,10 +1,10 @@
-import { DataSourceOptions } from "typeorm";
+import { DataSource } from "typeorm";
 import { Post } from "./entities/post.entity";
 
 import { isDev } from "./constants";
 import { User } from "./entities/user.entity";
 
-const config: DataSourceOptions = {
+const AppDataSource = new DataSource({
   type: "postgres",
   host: "localhost",
   port: 5432,
@@ -16,6 +16,6 @@ const config: DataSourceOptions = {
   entities: [Post, User],
   subscribers: [],
   migrations: [],
-};
+});
 
-export default config;
+export default AppDataSource;

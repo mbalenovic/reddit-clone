@@ -2,6 +2,7 @@ import argon2 from "argon2";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { PASSWORD_RECOVERY } from "../constants";
 import { User } from "../entities/user.entity";
+import AppDataSource from "../typeorm.config";
 import { type Context } from "../types/context.type";
 import { UserInput } from "../types/UserInput";
 import { UserInputLogin } from "../types/UserInputLogin";
@@ -11,10 +12,10 @@ import { sendEmail } from "../utils/sendEmail";
 @Resolver()
 export class UserResolver {
   @Query(() => User, { nullable: true })
-  async me(@Ctx() { ds, req }: Context): Promise<User | null> {
+  async me(@Ctx() { req }: Context): Promise<User | null> {
     if (!req.session.userId) return null;
 
-    const userRepo = ds.getRepository(User);
+    const userRepo = AppDataSource.getRepository(User);
     const user = await userRepo.findOneBy({ id: req.session.userId });
 
     return user;
@@ -23,9 +24,9 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async register(
     @Arg("userInput", () => UserInput) userInput: UserInput,
-    @Ctx() { ds, req }: Context
+    @Ctx() { req }: Context
   ): Promise<UserResponse> {
-    const userRepo = ds.getRepository(User);
+    const userRepo = AppDataSource.getRepository(User);
 
     try {
       const hashedPassword = await argon2.hash(userInput.password);
@@ -72,14 +73,14 @@ export class UserResolver {
   @Mutation(() => Boolean)
   async passwordRecovery(
     @Arg("email") email: string,
-    @Ctx() { ds, redisStore }: Context
+    @Ctx() { redisStore }: Context
   ): Promise<Boolean> {
     if (!email.includes("@")) {
       // return error
     }
 
     try {
-      const userRepo = ds.getRepository(User);
+      const userRepo = AppDataSource.getRepository(User);
       const user = await userRepo.findOneBy({ email });
 
       if (!user) {
@@ -109,13 +110,13 @@ export class UserResolver {
   async updatePassword(
     @Arg("recoveryToken") recoveryToken: string,
     @Arg("password") password: string,
-    @Ctx() { ds, redisStore }: Context
+    @Ctx() { redisStore }: Context
   ): Promise<Boolean> {
     if (password.length < 5) {
       // return error
     }
 
-    const userRepo = ds.getRepository(User);
+    const userRepo = AppDataSource.getRepository(User);
 
     try {
       const userId = await redisStore.client.get(
@@ -148,11 +149,11 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async login(
     @Arg("userInputLogin") userInputLogin: UserInputLogin,
-    @Ctx() { ds, req }: Context
+    @Ctx() { req }: Context
   ): Promise<UserResponse> {
     const { usernameOrEmail, password } = userInputLogin;
 
-    const userRepo = ds.getRepository(User);
+    const userRepo = AppDataSource.getRepository(User);
 
     const user = await userRepo.findOneBy(
       usernameOrEmail.includes("@")
