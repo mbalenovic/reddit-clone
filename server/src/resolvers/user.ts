@@ -1,4 +1,3 @@
-import argon2 from "argon2";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { PASSWORD_RECOVERY } from "../constants";
 import { isUser, User } from "../entities/user.entity";
@@ -119,13 +118,9 @@ export class UserResolver {
   ): Promise<UserResponse> {
     const { usernameOrEmail, password } = userInputLogin;
 
-    const userRepo = AppDataSource.getRepository(User);
+    const userService = new UserService(AppDataSource);
 
-    const user = await userRepo.findOneBy(
-      usernameOrEmail.includes("@")
-        ? { email: usernameOrEmail }
-        : { username: usernameOrEmail }
-    );
+    const user = await userService.findByEmailOrUsername(usernameOrEmail);
 
     if (!user) {
       return {
@@ -133,7 +128,7 @@ export class UserResolver {
       };
     }
 
-    const valid = await argon2.verify(user.password, password);
+    const valid = await userService.verifyPassword(user, password);
 
     if (!valid) {
       return {

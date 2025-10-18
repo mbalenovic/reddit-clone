@@ -15,6 +15,18 @@ export class UserService {
     return this.repo.findOneBy({ id });
   }
 
+  async findByEmailOrUsername(usernameOrEmail: string) {
+    return this.repo.findOneBy(
+      usernameOrEmail.includes("@")
+        ? { email: usernameOrEmail }
+        : { username: usernameOrEmail }
+    );
+  }
+
+  async verifyPassword(user: User, password: string) {
+    return argon2.verify(user.password, password);
+  }
+
   async createUser(user: UserInput): Promise<UserResponse> {
     try {
       const hashedPassword = await argon2.hash(user.password);
