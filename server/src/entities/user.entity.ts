@@ -9,7 +9,6 @@ import {
 @ObjectType()
 @Entity()
 export class User {
-  // [OptionalProps]?: "createdAt" | "updatedAt";
   @Field()
   @PrimaryGeneratedColumn()
   id!: number;
@@ -32,8 +31,4 @@ export class User {
 
   @Column()
   password!: string;
-}
-
-export function isUser(user: unknown): user is User {
-  return user instanceof User;
 }

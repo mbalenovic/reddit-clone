@@ -1,9 +1,11 @@
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { PASSWORD_RECOVERY } from "../constants";
-import { isUser, User } from "../entities/user.entity";
+import { User } from "../entities/user.entity";
+import { AppError } from "../errors/AppError";
 import { UserService } from "../services/user.service";
 import AppDataSource from "../typeorm.config";
 import { type Context } from "../types/context.type";
+import { isUser } from "../types/typeGuards/isUser";
 import { UserInput } from "../types/UserInput";
 import { UserInputLogin } from "../types/UserInputLogin";
 import { UserResponse } from "../types/UserResponse";
@@ -70,6 +72,7 @@ export class UserResolver {
   ): Promise<Boolean> {
     if (password.length < 5) {
       // return error
+      return false;
     }
 
     try {
@@ -107,22 +110,13 @@ export class UserResolver {
     const user = await this.userService.findByEmailOrUsername(usernameOrEmail);
 
     if (!user) {
-      return {
-        errors: [{ field: "username", message: "That user doesn't exist." }],
-      };
+      throw new AppError("username", "That user doesnt exist.");
     }
 
     const valid = await this.userService.verifyPassword(user, password);
 
     if (!valid) {
-      return {
-        errors: [
-          {
-            field: "password",
-            message: "Username or password doesn't match.",
-          },
-        ],
-      };
+      throw new AppError("password", "Username or password doesn't match.");
     }
 
     req.session.userId = user.id;

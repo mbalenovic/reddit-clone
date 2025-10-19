@@ -11,6 +11,7 @@ import { createClient } from "redis";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { isDev } from "./constants";
+import { ErrorInterceptor } from "./middleware/ErrorInterceptor";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
 import AppDataSource from "./typeorm.config";
@@ -42,6 +43,7 @@ async function main() {
     resolvers: [PostResolver, UserResolver],
     emitSchemaFile: path.resolve(__dirname, "schema.graphql"),
     validate: true,
+    globalMiddlewares: [ErrorInterceptor],
   });
 
   const apolloServer = new ApolloServer<Context>({

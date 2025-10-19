@@ -3,6 +3,7 @@ import { RedisStore } from "connect-redis";
 import { DataSource } from "typeorm";
 import { PASSWORD_RECOVERY } from "../constants";
 import { User } from "../entities/user.entity";
+import { AppError } from "../errors/AppError";
 import { UserInput } from "../types/UserInput";
 import { UserResponse } from "../types/UserResponse";
 import { sendEmail } from "../utils/sendEmail";
@@ -39,51 +40,20 @@ export class UserService {
       const hashedPassword = await argon2.hash(user.password);
       user.password = hashedPassword;
     } catch (error) {
-      return {
-        errors: [{ field: "password", message: "Could not hash password." }],
-      };
+      throw new AppError("password", "Could not hash password.");
     }
 
-    try {
-      const typeUser = new User();
+    const typeUser = new User();
 
-      const newUser = await this.repo.save({ ...typeUser, ...user });
+    const newUser = await this.repo.save({ ...typeUser, ...user });
 
-      return { user: newUser };
-    } catch (error) {
-      console.log("----", error);
-      if (error instanceof Error && "code" in error && error.code === "23505") {
-        return {
-          errors: [
-            {
-              field: "username",
-              message: "The user already exists.",
-            },
-          ],
-        };
-      } else {
-        return {
-          errors: [
-            {
-              field: "username",
-              message: "Unexpteced error during user creation.",
-            },
-          ],
-        };
-      }
-    }
+    return { user: newUser };
   }
 
   async updatePassword(user: User, password: string) {
-    try {
-      const hashedPassword = await argon2.hash(password);
-      user.password = hashedPassword;
-      const updatedUser = await this.repo.save(user);
-
-      return updatedUser;
-    } catch (error) {
-      throw error;
-    }
+    const hashedPassword = await argon2.hash(password);
+    user.password = hashedPassword;
+    return this.repo.save(user);
   }
 
   async sendPasswordRecovery(

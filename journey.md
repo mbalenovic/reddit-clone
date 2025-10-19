@@ -145,6 +145,11 @@ export class UserService {
   - in a resolver
   - in a middleware
 
+#### October 19
+
+- **1h (5:50:46)**:
+- ErrorInterceptor middleware
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).
@@ -157,3 +162,11 @@ export class UserService {
 - [ ] How to send and handle validation error messages and errors in general
 - [ ] Fix shadcn base styles/colors
 - [ ] Explore search params and dynamic routes (update-password.tsx)
+- [ ] Handle database exceptions in ErrorInterceptor
+- [ ] isUser.ts breaks app if the user entity is imported from @/...
+
+### Keyboard shortcuts
+
+- PGUP/PGDN
+- CMD + Shift + . => main functions
+- Ctrl + Shift + Right Arrow => smart select
