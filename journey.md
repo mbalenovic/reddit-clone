@@ -150,6 +150,16 @@ export class UserService {
 - **1h (5:50:46)**:
 - ErrorInterceptor middleware
 
+#### October 20
+
+- **1.5h (5:54:00)**:
+- Classes:
+  - abstract - can't instantiate, only extend
+  - super - calls the parent class's constructor
+  - `new () => T` type signature of a class constructor; a function that returns a T when called with new.
+  - override methods only to extend or specialize the base logic
+- typeorm remove() vs delete() - remove is slower, but safer and more consistent
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).
