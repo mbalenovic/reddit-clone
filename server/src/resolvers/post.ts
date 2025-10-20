@@ -1,31 +1,28 @@
 import { Arg, Int, Mutation, Query, Resolver } from "type-graphql";
 import { Post } from "../entities/post.entity";
+import { PostService } from "../services/post.service";
 import AppDataSource from "../typeorm.config";
 
 @Resolver()
 export class PostResolver {
+  private postService = new PostService(AppDataSource);
+
   @Query(() => Post, { nullable: true })
   post(@Arg("id", (_type) => Int) id: number): Promise<Post | null> {
-    const postRepo = AppDataSource.getRepository(Post);
-
-    return postRepo.findOneBy({ id });
+    return this.postService.findById(id);
   }
 
   @Query(() => [Post])
   posts(): Promise<Post[]> {
-    const postRepo = AppDataSource.getRepository(Post);
-
-    return postRepo.find();
+    return this.postService.find();
   }
 
   @Mutation(() => Post)
   async createPost(@Arg("title", () => String) title: string): Promise<Post> {
-    const postRepo = AppDataSource.getRepository(Post);
-
     const post = new Post();
     post.title = title;
 
-    return await postRepo.save(post);
+    return await this.postService.save(post);
   }
 
   @Mutation(() => Post)
@@ -33,16 +30,16 @@ export class PostResolver {
     @Arg("id", () => Int) id: number,
     @Arg("title", () => String) title: string
   ): Promise<Post | null> {
-    const postRepo = AppDataSource.getRepository(Post);
-
-    const post = await postRepo.findOneBy({ id });
+    const post = await this.postService.findById(id);
     if (!post) {
       return null;
     }
 
     if (typeof title !== "undefined") {
-      post.title = title;
-      await postRepo.save(post);
+      const newPost = new Post();
+      newPost.title = title;
+
+      await this.postService.save(newPost);
     }
 
     return post;
@@ -50,15 +47,6 @@ export class PostResolver {
 
   @Mutation(() => Number)
   async deletePost(@Arg("id", () => Int) id: number): Promise<number> {
-    const postRepo = AppDataSource.getRepository(Post);
-    const post = await postRepo.findOneBy({ id });
-
-    // TODO: add better handling for post not found
-    if (!post) {
-      return 0;
-    }
-
-    const removedPost = await postRepo.remove(post);
-    return removedPost.id;
+    return this.postService.remove(id);
   }
 }

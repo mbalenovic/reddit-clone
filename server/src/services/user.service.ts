@@ -7,16 +7,11 @@ import { AppError } from "../errors/AppError";
 import { UserInput } from "../types/UserInput";
 import { UserResponse } from "../types/UserResponse";
 import { sendEmail } from "../utils/sendEmail";
+import { BaseService } from "./base.service";
 
-export class UserService {
-  constructor(private AppDataSource: DataSource) {}
-
-  private get repo() {
-    return this.AppDataSource.getRepository(User);
-  }
-
-  async findById(id: number) {
-    return this.repo.findOneBy({ id });
+export class UserService extends BaseService<User> {
+  constructor(AppDataSource: DataSource) {
+    super(AppDataSource, User);
   }
 
   async findByEmail(email: string) {
