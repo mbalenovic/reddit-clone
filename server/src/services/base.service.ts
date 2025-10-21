@@ -24,7 +24,7 @@ export abstract class BaseService<T> {
     return this.repo.remove(entity);
   }
 
-  async save(entity: T) {
+  async save(entity: T): Promise<T> {
     return this.repo.save(entity);
   }
 }

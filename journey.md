@@ -152,13 +152,19 @@ export class UserService {
 
 #### October 20
 
-- **1.5h (5:54:00)**:
+- **1.5h 6:02:35**:
 - Classes:
   - abstract - can't instantiate, only extend
   - super - calls the parent class's constructor
   - `new () => T` type signature of a class constructor; a function that returns a T when called with new.
   - override methods only to extend or specialize the base logic
 - typeorm remove() vs delete() - remove is slower, but safer and more consistent
+
+#### October 21
+
+- **1.5h 6:02:35**:
+- added relationships [many-to-one](https://typeorm.io/docs/getting-started/#creating-a-many-to-one--one-to-many-relation)
+- Auth middleware (error was caught in ErrorInterceptor middleware)
 
 ### Integration Notes
 
@@ -180,3 +186,5 @@ export class UserService {
 - PGUP/PGDN
 - CMD + Shift + . => main functions
 - Ctrl + Shift + Right Arrow => smart select
+
+TODO: auth middleware

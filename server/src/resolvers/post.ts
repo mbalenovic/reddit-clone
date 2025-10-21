@@ -1,7 +1,18 @@
-import { Arg, Int, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Int,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from "type-graphql";
 import { Post } from "../entities/post.entity";
+import { AuthInterceptor } from "../middleware/AuthInterceptor";
 import { PostService } from "../services/post.service";
 import AppDataSource from "../typeorm.config";
+import { type Context } from "../types/context.type";
+import { PostInput } from "../types/PostInput";
 
 @Resolver()
 export class PostResolver {
@@ -18,11 +29,15 @@ export class PostResolver {
   }
 
   @Mutation(() => Post)
-  async createPost(@Arg("title", () => String) title: string): Promise<Post> {
+  @UseMiddleware(AuthInterceptor)
+  async createPost(
+    @Arg("postInput", () => PostInput) postInput: PostInput,
+    @Ctx() { req }: Context
+  ): Promise<Post> {
     const post = new Post();
-    post.title = title;
+    post.authorId = req.session.userId!;
 
-    return await this.postService.save(post);
+    return await this.postService.save({ ...post, ...postInput });
   }
 
   @Mutation(() => Post)

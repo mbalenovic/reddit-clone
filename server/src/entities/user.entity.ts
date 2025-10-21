@@ -2,9 +2,11 @@ import { Field, ObjectType } from "type-graphql";
 import {
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Post } from "./post.entity";
 
 @ObjectType()
 @Entity()
@@ -31,4 +33,7 @@ export class User {
 
   @Column()
   password!: string;
+
+  @OneToMany(() => Post, (post) => post.authorId)
+  posts!: Post[];
 }

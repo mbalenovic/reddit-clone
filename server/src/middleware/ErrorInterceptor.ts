@@ -1,4 +1,3 @@
-// src/middleware/ErrorInterceptor.ts
 import { MiddlewareFn } from "type-graphql";
 import { AppError } from "../errors/AppError";
 
@@ -6,6 +5,12 @@ export const ErrorInterceptor: MiddlewareFn<any> = async (_, next) => {
   try {
     return await next();
   } catch (err) {
+    if (err instanceof Error) {
+      // TODO: add a cleaner check
+      if (err.message === "User is unauthenticated.") {
+        throw err;
+      }
+    }
     // Handle known app errors
     if (err instanceof AppError) {
       return {
