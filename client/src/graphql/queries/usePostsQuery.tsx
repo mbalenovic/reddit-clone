@@ -8,6 +8,7 @@ const POSTS = graphql(`
       createdAt
       updatedAt
       title
+      text
     }
   }
 `);

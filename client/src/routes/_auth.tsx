@@ -13,5 +13,9 @@ export const Route = createFileRoute("/_auth")({
       });
     }
   },
-  component: () => <Outlet />,
+  component: () => (
+    <div className="m-2">
+      <Outlet />
+    </div>
+  ),
 });

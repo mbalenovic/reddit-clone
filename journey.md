@@ -166,6 +166,10 @@ export class UserService {
 - added relationships [many-to-one](https://typeorm.io/docs/getting-started/#creating-a-many-to-one--one-to-many-relation)
 - Auth middleware (error was caught in ErrorInterceptor middleware)
 
+#### October 25
+
+- **0.75h 6:13:23**:
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).
