@@ -28,13 +28,15 @@ export class UserResolver {
     @Arg("userInput", () => UserInput) userInput: UserInput,
     @Ctx() { req }: Context
   ): Promise<UserResponse> {
-    const result = await this.userService.createUser(userInput);
+    const user = await this.userService.createUser(userInput);
 
-    if (isUser(result)) {
-      req.session.userId = result.id;
+    // unneccesary narrowing
+    if (!isUser(user)) {
+      throw new AppError("username", "That user doesnt exist.");
     }
 
-    return result;
+    req.session.userId = user.id;
+    return { user };
   }
 
   @Mutation(() => Boolean)

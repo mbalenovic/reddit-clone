@@ -5,7 +5,6 @@ import { PASSWORD_RECOVERY } from "../constants";
 import { User } from "../entities/user.entity";
 import { AppError } from "../errors/AppError";
 import { UserInput } from "../types/UserInput";
-import { UserResponse } from "../types/UserResponse";
 import { sendEmail } from "../utils/sendEmail";
 import { BaseService } from "./base.service";
 
@@ -30,7 +29,7 @@ export class UserService extends BaseService<User> {
     return argon2.verify(user.password, password);
   }
 
-  async createUser(user: UserInput): Promise<UserResponse> {
+  async createUser(user: UserInput): Promise<User> {
     try {
       const hashedPassword = await argon2.hash(user.password);
       user.password = hashedPassword;
@@ -42,7 +41,7 @@ export class UserService extends BaseService<User> {
 
     const newUser = await this.repo.save({ ...typeUser, ...user });
 
-    return { user: newUser };
+    return newUser;
   }
 
   async updatePassword(user: User, password: string) {
