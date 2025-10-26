@@ -21,29 +21,33 @@ const Header = () => {
   }
 
   return (
-    <div className="flex justify-end">
-      {auth.isAuthenticated ? (
-        <DropdownMenu>
-          <DropdownMenuTrigger className="p-4">
-            {auth.user?.username}
-          </DropdownMenuTrigger>{" "}
-          <DropdownMenuContent
-            className="p-4 bg-popover text-popover-foreground border border-border rounded-md shadow-md"
-            align="end"
-          >
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ) : (
-        <>
-          <Link to={SigninRoute.to}>Sign In</Link>
-          <Link to={SignupRoute.to} className="ml-4">
-            Sign Up
-          </Link>
-        </>
-      )}
+    <div className="flex justify-start bg-teal-300 p-4">
+      <Link to={"/"}>Posts</Link>
+
+      <div className="ml-auto">
+        {auth.isAuthenticated ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="p-4">
+              {auth.user?.username}
+            </DropdownMenuTrigger>{" "}
+            <DropdownMenuContent
+              className="p-4 bg-popover text-popover-foreground border border-border rounded-md shadow-md"
+              align="end"
+            >
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <>
+            <Link to={SigninRoute.to}>Sign In</Link>
+            <Link to={SignupRoute.to} className="ml-4">
+              Sign Up
+            </Link>
+          </>
+        )}
+      </div>
     </div>
   );
 };

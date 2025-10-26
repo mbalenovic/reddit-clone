@@ -1,8 +1,8 @@
 import { useCreatePostMutation } from "@/graphql/mutations/useCreatePostMutation";
 import { CombinedGraphQLErrors } from "@apollo/client";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-
+import { Route as IndexRoute } from "@/routes/__root";
 export const Route = createFileRoute("/_auth/create-post")({
   component: RouteComponent,
 });
@@ -10,6 +10,7 @@ export const Route = createFileRoute("/_auth/create-post")({
 function RouteComponent() {
   const [isLoading, setIsLoading] = useState(false);
   const [createPost] = useCreatePostMutation();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,6 +24,8 @@ function RouteComponent() {
       await createPost({
         variables: { createPostPostInput: { title, text } },
       });
+
+      navigate({ to: IndexRoute.to });
     } catch (error) {
       // TODO: validation error
       if (CombinedGraphQLErrors.is(error)) {

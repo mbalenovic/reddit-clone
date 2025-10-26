@@ -7,7 +7,7 @@ import {
   useNavigate,
 } from "@tanstack/react-router";
 import { useState } from "react";
-import { Route as IndexRoute } from "./_auth/index";
+import { Route as IndexRoute } from "./index";
 import { Route as PasswordRecoveryRoute } from "./password-recovery";
 
 export const Route = createFileRoute("/signin")({
@@ -55,7 +55,7 @@ function RouteComponent() {
   };
 
   return (
-    <div className="bg-gray-200 flex justify-center items-center h-screen ">
+    <div className="flex justify-center items-center h-screen">
       <form action="" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username" className="block">
@@ -89,8 +89,8 @@ function RouteComponent() {
           </div>
         </div>
         <div className="mt-2">
-          {errors.map((error) => (
-            <span className="text-red-400" aria-live="polite">
+          {errors.map((error, index) => (
+            <span key={index} className="text-red-400" aria-live="polite">
               {error.message}
             </span>
           ))}

@@ -2,7 +2,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { CombinedGraphQLErrors } from "@apollo/client";
 import { useState } from "react";
 import { FieldError } from "@/gql/graphql";
-import { Route as IndexRoute } from "./_auth/index";
+import { Route as IndexRoute } from "./index";
 
 export const Route = createFileRoute("/signup")({
   component: RouteComponent,
@@ -49,7 +49,7 @@ function RouteComponent() {
   };
 
   return (
-    <div className="bg-gray-200 flex justify-center items-center h-screen ">
+    <div className="flex justify-center items-center h-screen ">
       <form action="" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username" className="block">

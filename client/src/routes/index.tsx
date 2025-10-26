@@ -1,7 +1,8 @@
 import { usePostsQuery } from "@/graphql/queries/usePostsQuery";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Route as PostCreateRoute } from "@/routes/_auth/create-post";
 
-export const Route = createFileRoute("/_auth/")({
+export const Route = createFileRoute("/")({
   component: App,
 });
 
@@ -10,7 +11,10 @@ function App() {
 
   return (
     <>
-      <div className="text-center">index</div>
+      <div className="text-center">Posts</div>
+      <Link to={PostCreateRoute.to} className="bg-red-300 p-1 px-3 rounded-sm">
+        Create Post
+      </Link>
       {loading ? (
         <p>loading...</p>
       ) : (
