@@ -14,26 +14,30 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+    "\n  fragment PostFragment on Post {\n    id\n    createdAt\n    updatedAt\n    title\n    text\n    points\n    authorId\n  }\n": typeof types.PostFragmentFragmentDoc,
     "\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n    email\n  }\n": typeof types.UserFragmentFragmentDoc,
-    "\n  mutation CreatePost($createPostPostInput: PostInput!) {\n    createPost(postInput: $createPostPostInput) {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n      points\n      authorId\n    }\n  }\n": typeof types.CreatePostDocument,
+    "\n  mutation CreatePost($postInput: PostInput!) {\n    createPost(postInput: $postInput) {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n      points\n      authorId\n    }\n  }\n": typeof types.CreatePostDocument,
+    "\n                fragment NewPost on Post {\n                  id\n                  createdAt\n                  updatedAt\n                  title\n                  text\n                  points\n                  authorId\n                }\n              ": typeof types.NewPostFragmentDoc,
     "\n  mutation Login($userInputLogin: UserInputLogin!) {\n    login(userInputLogin: $userInputLogin) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": typeof types.LoginDocument,
     "\n  mutation Logout {\n    logout\n  }\n": typeof types.LogoutDocument,
     "\n  mutation PasswordRecovery($email: String!) {\n    passwordRecovery(email: $email)\n  }\n": typeof types.PasswordRecoveryDocument,
     "\n  mutation UpdatePassword($recoveryToken: String!, $password: String!) {\n    updatePassword(recoveryToken: $recoveryToken, password: $password)\n  }\n": typeof types.UpdatePasswordDocument,
     "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": typeof types.RegisterDocument,
     "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n": typeof types.QueryDocument,
-    "\n  query Posts {\n    posts {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n    }\n  }\n": typeof types.PostsDocument,
+    "\n  query Posts {\n    posts {\n      ...PostFragment\n    }\n  }\n": typeof types.PostsDocument,
 };
 const documents: Documents = {
+    "\n  fragment PostFragment on Post {\n    id\n    createdAt\n    updatedAt\n    title\n    text\n    points\n    authorId\n  }\n": types.PostFragmentFragmentDoc,
     "\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n    email\n  }\n": types.UserFragmentFragmentDoc,
-    "\n  mutation CreatePost($createPostPostInput: PostInput!) {\n    createPost(postInput: $createPostPostInput) {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n      points\n      authorId\n    }\n  }\n": types.CreatePostDocument,
+    "\n  mutation CreatePost($postInput: PostInput!) {\n    createPost(postInput: $postInput) {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n      points\n      authorId\n    }\n  }\n": types.CreatePostDocument,
+    "\n                fragment NewPost on Post {\n                  id\n                  createdAt\n                  updatedAt\n                  title\n                  text\n                  points\n                  authorId\n                }\n              ": types.NewPostFragmentDoc,
     "\n  mutation Login($userInputLogin: UserInputLogin!) {\n    login(userInputLogin: $userInputLogin) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": types.LoginDocument,
     "\n  mutation Logout {\n    logout\n  }\n": types.LogoutDocument,
     "\n  mutation PasswordRecovery($email: String!) {\n    passwordRecovery(email: $email)\n  }\n": types.PasswordRecoveryDocument,
     "\n  mutation UpdatePassword($recoveryToken: String!, $password: String!) {\n    updatePassword(recoveryToken: $recoveryToken, password: $password)\n  }\n": types.UpdatePasswordDocument,
     "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": types.RegisterDocument,
     "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n": types.QueryDocument,
-    "\n  query Posts {\n    posts {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n    }\n  }\n": types.PostsDocument,
+    "\n  query Posts {\n    posts {\n      ...PostFragment\n    }\n  }\n": types.PostsDocument,
 };
 
 /**
@@ -53,11 +57,19 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  fragment PostFragment on Post {\n    id\n    createdAt\n    updatedAt\n    title\n    text\n    points\n    authorId\n  }\n"): (typeof documents)["\n  fragment PostFragment on Post {\n    id\n    createdAt\n    updatedAt\n    title\n    text\n    points\n    authorId\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n    email\n  }\n"): (typeof documents)["\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n    email\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation CreatePost($createPostPostInput: PostInput!) {\n    createPost(postInput: $createPostPostInput) {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n      points\n      authorId\n    }\n  }\n"): (typeof documents)["\n  mutation CreatePost($createPostPostInput: PostInput!) {\n    createPost(postInput: $createPostPostInput) {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n      points\n      authorId\n    }\n  }\n"];
+export function graphql(source: "\n  mutation CreatePost($postInput: PostInput!) {\n    createPost(postInput: $postInput) {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n      points\n      authorId\n    }\n  }\n"): (typeof documents)["\n  mutation CreatePost($postInput: PostInput!) {\n    createPost(postInput: $postInput) {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n      points\n      authorId\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n                fragment NewPost on Post {\n                  id\n                  createdAt\n                  updatedAt\n                  title\n                  text\n                  points\n                  authorId\n                }\n              "): (typeof documents)["\n                fragment NewPost on Post {\n                  id\n                  createdAt\n                  updatedAt\n                  title\n                  text\n                  points\n                  authorId\n                }\n              "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -85,7 +97,7 @@ export function graphql(source: "\n  query Query {\n    me {\n      ...UserFragm
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query Posts {\n    posts {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n    }\n  }\n"): (typeof documents)["\n  query Posts {\n    posts {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n    }\n  }\n"];
+export function graphql(source: "\n  query Posts {\n    posts {\n      ...PostFragment\n    }\n  }\n"): (typeof documents)["\n  query Posts {\n    posts {\n      ...PostFragment\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

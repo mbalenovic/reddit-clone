@@ -170,6 +170,16 @@ export class UserService {
 
 - **0.75h 6:13:23**:
 
+#### October 26
+
+- **3.5h 6:42:00**:
+- TypeORM returns plain objects, not class instances. Updated the isUser type guard to validate shape existence, but it still misses type validation
+  - some teams avoid using instanceof, and check for fields
+  - tools like Zod give you a strong guarantees about shape and type (more important than instanceof)
+- Apollo client cache invalidation after mutation:
+  - codegen from @graphql-codegen returns typed wrapper object, and not a plain DocumentNode. That's why `refetchQueries: [{ query: POSTS }]` is used instead of `refetchQueries: [GET_POST, "GetComments"]`
+  - opted for `update` function
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).
@@ -184,6 +194,7 @@ export class UserService {
 - [ ] Explore search params and dynamic routes (update-password.tsx)
 - [ ] Handle database exceptions in ErrorInterceptor
 - [ ] isUser.ts breaks app if the user entity is imported from @/...
+- [ ] add Zod validation
 
 ### Keyboard shortcuts
 

@@ -1,15 +1,13 @@
 import { useCreatePostMutation } from "@/graphql/mutations/useCreatePostMutation";
 import { CombinedGraphQLErrors } from "@apollo/client";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 import { Route as IndexRoute } from "@/routes/__root";
 export const Route = createFileRoute("/_auth/create-post")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [createPost] = useCreatePostMutation();
+  const [createPost, { loading }] = useCreatePostMutation();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,9 +18,8 @@ function RouteComponent() {
     const text = formData.get("text") as string;
 
     try {
-      setIsLoading(true);
       await createPost({
-        variables: { createPostPostInput: { title, text } },
+        variables: { postInput: { title, text } },
       });
 
       navigate({ to: IndexRoute.to });
@@ -31,8 +28,6 @@ function RouteComponent() {
       if (CombinedGraphQLErrors.is(error)) {
         console.log(error);
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -69,7 +64,7 @@ function RouteComponent() {
         <div className="flex justify-center mt-4">
           <input
             type="submit"
-            disabled={isLoading}
+            disabled={loading}
             value="Create"
             className="bg-red-300 p-1 px-3 rounded-sm"
           />
