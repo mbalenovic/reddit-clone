@@ -1,7 +1,8 @@
-import { Field, Int, ObjectType } from "type-graphql";
+import { Field, GraphQLISODateTime, Int, ObjectType } from "type-graphql";
 import {
   Column,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -15,11 +16,12 @@ export class Post {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Field(() => String)
+  @Field(() => GraphQLISODateTime)
+  @Index()
   @UpdateDateColumn()
   createdAt = new Date();
 
-  @Field(() => String)
+  @Field(() => GraphQLISODateTime)
   @UpdateDateColumn()
   updatedAt = new Date();
 

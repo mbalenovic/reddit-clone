@@ -10,6 +10,7 @@ import reportWebVitals from "./reportWebVitals.ts";
 import { AuthProvider, useAuth } from "./auth.tsx";
 import { ApolloProvider } from "@apollo/client/react";
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { relayStylePagination } from "@apollo/client/utilities";
 
 // Create a new router instance
 const router = createRouter({
@@ -39,7 +40,15 @@ const client = new ApolloClient({
     uri: "http://localhost:4000/graphql",
     credentials: "include",
   }),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          posts: relayStylePagination(),
+        },
+      },
+    },
+  }),
 });
 
 function App() {

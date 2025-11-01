@@ -11,9 +11,9 @@ interface MyRouterContext {
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <>
-      <div className="h-screen  bg-gray-100 ">
+      <div className="h-screen  bg-gray-100 overflow-y-auto">
         <Header />
-        <div className="m-2">
+        <div className="m-2 mb-5">
           <Outlet />
         </div>
       </div>

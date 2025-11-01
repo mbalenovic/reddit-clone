@@ -12,6 +12,7 @@ import { AuthInterceptor } from "../middleware/AuthInterceptor";
 import { PostService } from "../services/post.service";
 import AppDataSource from "../typeorm.config";
 import { type Context } from "../types/context.type";
+import { PostConnection } from "../types/PostConnection";
 import { PostInput } from "../types/PostInput";
 
 @Resolver()
@@ -23,9 +24,30 @@ export class PostResolver {
     return this.postService.findById(id);
   }
 
-  @Query(() => [Post])
-  posts(): Promise<Post[]> {
-    return this.postService.find();
+  @Query(() => PostConnection)
+  async posts(
+    @Arg("first") first: number,
+    @Arg("after", () => String, { nullable: true }) after: string | null
+  ): Promise<PostConnection> {
+    const posts = await this.postService.getPosts(first, after);
+
+    const hasNextPage = posts.length > first;
+    const slicedPosts = posts.slice(0, first);
+
+    const edges = slicedPosts.map((post) => ({
+      node: post,
+      cursor: post.createdAt.toISOString(),
+    }));
+
+    const endCursor = edges.length > 0 ? edges[edges.length - 1]!.cursor : null;
+
+    return {
+      edges,
+      pageInfo: {
+        hasNextPage,
+        endCursor,
+      },
+    };
   }
 
   @Mutation(() => Post)
@@ -61,7 +83,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Number)
-  async deletePost(@Arg("id", () => Int) id: number): Promise<number> {
+  async deletePost(@Arg("id", () => Int) id: number): Promise<Post | null> {
     return this.postService.remove(id);
   }
 }

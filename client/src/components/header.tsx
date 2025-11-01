@@ -21,7 +21,7 @@ const Header = () => {
   }
 
   return (
-    <div className="flex justify-start items-center bg-teal-300 p-4">
+    <div className="flex justify-start items-center bg-teal-300 p-4 sticky top-0">
       <Link to={"/"}>Posts</Link>
 
       <div className="ml-auto">

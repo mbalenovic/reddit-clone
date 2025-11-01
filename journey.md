@@ -180,6 +180,31 @@ export class UserService {
   - codegen from @graphql-codegen returns typed wrapper object, and not a plain DocumentNode. That's why `refetchQueries: [{ query: POSTS }]` is used instead of `refetchQueries: [GET_POST, "GetComments"]`
   - opted for `update` function
 
+#### October 27
+
+- **1.5h 6:42:00**:
+- Cursor pagination:
+
+```
+    if (cursor) {
+      query.where({ createdAt: MoreThan(cursor) });
+    }
+```
+
+#### October 28
+
+- **0.7h 6:53:23**:
+- updatedAt GraphQL type is GraphQLISODateTime instead of String
+- generate mock data - [https://www.mockaroo.com/](https://www.mockaroo.com/)
+
+#### October 31
+
+- **1h 7:13:20**:
+
+- **4h 8:00:54**:
+- [https://www.apollographql.com/docs/graphos/schema-design/guides/relay-style-connections](https://www.apollographql.com/docs/graphos/schema-design/guides/relay-style-connections)
+- shadcn Button prop asChild renders a child component (e.g. Link) with Button styles & behaviors
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).
@@ -195,6 +220,7 @@ export class UserService {
 - [ ] Handle database exceptions in ErrorInterceptor
 - [ ] isUser.ts breaks app if the user entity is imported from @/...
 - [ ] add Zod validation
+- [ ] fix rerendering whole page when loading more Posts
 
 ### Keyboard shortcuts
 
@@ -202,4 +228,4 @@ export class UserService {
 - CMD + Shift + . => main functions
 - Ctrl + Shift + Right Arrow => smart select
 
-TODO: auth middleware
+TODO: post pagination - posts resolver with cursor and then client changes
