@@ -1,11 +1,5 @@
+import PostList from "@/routes/(index)/components/post-list";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { PostsQuery } from "@/gql/graphql";
 import { usePostsQuery } from "@/graphql/queries/usePostsQuery";
 import { Route as PostCreateRoute } from "@/routes/_auth/create-post";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -13,21 +7,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/")({
   component: App,
 });
-
-function PostList({ edges }: { edges: PostsQuery["posts"]["edges"] }) {
-  return (
-    <>
-      {edges.map(({ node }) => (
-        <Card key={node.id} className="mt-2">
-          <CardHeader>
-            <CardTitle>{node.title}</CardTitle>
-            <CardDescription>{node.text}</CardDescription>
-          </CardHeader>
-        </Card>
-      ))}
-    </>
-  );
-}
 
 function App() {
   const { data, loading, fetchMore } = usePostsQuery({ first: 10 });

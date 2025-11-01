@@ -11,7 +11,8 @@ export class PostService extends BaseService<Post> {
     const query = this.repository
       .createQueryBuilder("post")
       .orderBy("post.createdAt", "DESC")
-      .limit(first + 1);
+      .limit(first + 1)
+      .leftJoinAndSelect("post.author", "author");
 
     if (after) {
       query.where({ createdAt: LessThan(new Date(after)) });

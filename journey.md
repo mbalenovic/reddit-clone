@@ -201,9 +201,11 @@ export class UserService {
 
 - **1h 7:13:20**:
 
-- **4h 8:00:54**:
+- **6h 8:18:50**:
 - [https://www.apollographql.com/docs/graphos/schema-design/guides/relay-style-connections](https://www.apollographql.com/docs/graphos/schema-design/guides/relay-style-connections)
 - shadcn Button prop asChild renders a child component (e.g. Link) with Button styles & behaviors
+- Get an element type from array by using [number] for index e.g. `PostsQuery["posts"]["edges"][number]["node"]`
+- Had an instict to add a subsequent query call instead of left joining two tables (post and user in getAllPosts)
 
 ### Integration Notes
 

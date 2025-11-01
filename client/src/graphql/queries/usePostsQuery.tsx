@@ -8,6 +8,9 @@ export const POSTS = graphql(`
       edges {
         node {
           ...PostFragment
+          author {
+            username
+          }
         }
         cursor
       }

@@ -41,6 +41,7 @@ export class Post {
   @Column()
   authorId!: number;
 
+  @Field()
   @ManyToOne(() => User, (user) => user.posts)
   author!: User;
 }

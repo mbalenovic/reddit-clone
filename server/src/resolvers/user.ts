@@ -23,6 +23,11 @@ export class UserResolver {
     return user;
   }
 
+  @Query(() => User, { nullable: true })
+  async user(@Arg("userId") userId: number): Promise<User | null> {
+    return this.userService.findById(userId);
+  }
+
   @Mutation(() => UserResponse)
   async register(
     @Arg("userInput", () => UserInput) userInput: UserInput,

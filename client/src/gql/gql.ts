@@ -24,7 +24,8 @@ type Documents = {
     "\n  mutation UpdatePassword($recoveryToken: String!, $password: String!) {\n    updatePassword(recoveryToken: $recoveryToken, password: $password)\n  }\n": typeof types.UpdatePasswordDocument,
     "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": typeof types.RegisterDocument,
     "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n": typeof types.QueryDocument,
-    "\n  query Posts($first: Float!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        node {\n          ...PostFragment\n        }\n        cursor\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n": typeof types.PostsDocument,
+    "\n  query Posts($first: Float!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        node {\n          ...PostFragment\n          author {\n            username\n          }\n        }\n        cursor\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n": typeof types.PostsDocument,
+    "\n  query User($userId: Float!) {\n    user(userId: $userId) {\n      ...UserFragment\n    }\n  }\n": typeof types.UserDocument,
 };
 const documents: Documents = {
     "\n  fragment PostFragment on Post {\n    id\n    createdAt\n    updatedAt\n    title\n    text\n    points\n    authorId\n  }\n": types.PostFragmentFragmentDoc,
@@ -37,7 +38,8 @@ const documents: Documents = {
     "\n  mutation UpdatePassword($recoveryToken: String!, $password: String!) {\n    updatePassword(recoveryToken: $recoveryToken, password: $password)\n  }\n": types.UpdatePasswordDocument,
     "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": types.RegisterDocument,
     "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n": types.QueryDocument,
-    "\n  query Posts($first: Float!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        node {\n          ...PostFragment\n        }\n        cursor\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n": types.PostsDocument,
+    "\n  query Posts($first: Float!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        node {\n          ...PostFragment\n          author {\n            username\n          }\n        }\n        cursor\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n": types.PostsDocument,
+    "\n  query User($userId: Float!) {\n    user(userId: $userId) {\n      ...UserFragment\n    }\n  }\n": types.UserDocument,
 };
 
 /**
@@ -97,7 +99,11 @@ export function graphql(source: "\n  query Query {\n    me {\n      ...UserFragm
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query Posts($first: Float!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        node {\n          ...PostFragment\n        }\n        cursor\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n"): (typeof documents)["\n  query Posts($first: Float!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        node {\n          ...PostFragment\n        }\n        cursor\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query Posts($first: Float!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        node {\n          ...PostFragment\n          author {\n            username\n          }\n        }\n        cursor\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n"): (typeof documents)["\n  query Posts($first: Float!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        node {\n          ...PostFragment\n          author {\n            username\n          }\n        }\n        cursor\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query User($userId: Float!) {\n    user(userId: $userId) {\n      ...UserFragment\n    }\n  }\n"): (typeof documents)["\n  query User($userId: Float!) {\n    user(userId: $userId) {\n      ...UserFragment\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};
