@@ -1,4 +1,12 @@
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+} from "type-graphql";
 import { PASSWORD_RECOVERY } from "../constants";
 import { User } from "../entities/user.entity";
 import { AppError } from "../errors/AppError";
@@ -10,9 +18,18 @@ import { UserInput } from "../types/UserInput";
 import { UserInputLogin } from "../types/UserInputLogin";
 import { UserResponse } from "../types/UserResponse";
 
-@Resolver()
+@Resolver((of) => User)
 export class UserResolver {
   private userService = new UserService(AppDataSource);
+
+  @FieldResolver(() => String)
+  email(@Root() user: User, @Ctx() { req }: Context) {
+    console.log(req.session.userId, user.id);
+    if (req.session.userId === user.id) {
+      return user.email;
+    }
+    return "";
+  }
 
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req }: Context): Promise<User | null> {
