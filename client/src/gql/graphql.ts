@@ -87,6 +87,7 @@ export type Post = {
   id: Scalars['Int']['output'];
   points: Scalars['Int']['output'];
   text: Scalars['String']['output'];
+  textSnippet: Scalars['String']['output'];
   title: Scalars['String']['output'];
   updatedAt: Scalars['DateTimeISO']['output'];
 };

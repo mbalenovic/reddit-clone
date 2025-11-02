@@ -1,10 +1,12 @@
 import {
   Arg,
   Ctx,
+  FieldResolver,
   Int,
   Mutation,
   Query,
   Resolver,
+  Root,
   UseMiddleware,
 } from "type-graphql";
 import { Post } from "../entities/post.entity";
@@ -15,9 +17,14 @@ import { type Context } from "../types/context.type";
 import { PostConnection } from "../types/PostConnection";
 import { PostInput } from "../types/PostInput";
 
-@Resolver()
+@Resolver((of) => Post)
 export class PostResolver {
   private postService = new PostService(AppDataSource);
+
+  @FieldResolver(() => String)
+  textSnippet(@Root() post: Post) {
+    return post.text.slice(0, 20);
+  }
 
   @Query(() => Post, { nullable: true })
   post(@Arg("id", (_type) => Int) id: number): Promise<Post | null> {
