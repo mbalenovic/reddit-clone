@@ -53,17 +53,21 @@ export class PostResolver {
     upvote.userId = req.session.userId!;
     upvote.value = realValue;
 
-    await this.upvoteService.save(upvote);
+    return AppDataSource.transaction(async (transactionalEntityManager) => {
+      await transactionalEntityManager.save(upvote);
 
-    const post = await this.postService.findById(postId);
+      const post = await transactionalEntityManager.findOneBy(Post, {
+        id: postId,
+      });
 
-    if (!post) {
-      return null;
-    }
+      if (!post) {
+        return null;
+      }
 
-    post.points = post.points + realValue;
+      post.points = post.points + realValue;
 
-    return this.postService.save(post);
+      return transactionalEntityManager.save(post);
+    });
   }
 
   @Query(() => PostConnection)

@@ -215,11 +215,12 @@ export class UserService {
 
 #### November 03
 
-- **2h 6:53:23**:
+- **2.5h 8:57:25**:
 - Using userId and postId as primary columns ensures no duplicates unlike using the additional PrimaryGeneratedColumn
 - Many-to-many:
   - No extra fields => @ManyToMany + @JoinTable()
   - [With extra fields](https://typeorm.io/docs/relations/many-to-many-relations#many-to-many-relations-with-custom-properties) => Create a new entity and connect with @OneToMany / @ManyToOne
+- [Transactions](https://typeorm.io/docs/advanced-topics/transactions/) - ensures the whole logic is one operation. If one of the operations fails, all fails.
 
 ### Integration Notes
 
