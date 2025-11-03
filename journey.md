@@ -201,11 +201,25 @@ export class UserService {
 
 - **1h 7:13:20**:
 
+#### November 01
+
 - **6h 8:18:50**:
 - [https://www.apollographql.com/docs/graphos/schema-design/guides/relay-style-connections](https://www.apollographql.com/docs/graphos/schema-design/guides/relay-style-connections)
 - shadcn Button prop asChild renders a child component (e.g. Link) with Button styles & behaviors
 - Get an element type from array by using [number] for index e.g. `PostsQuery["posts"]["edges"][number]["node"]`
 - Had an instict to add a subsequent query call instead of left joining two tables (post and user in getAllPosts)
+
+#### November 02
+
+- **1h 8:28:04**:
+
+#### November 03
+
+- **2h 6:53:23**:
+- Using userId and postId as primary columns ensures no duplicates unlike using the additional PrimaryGeneratedColumn
+- Many-to-many:
+  - No extra fields => @ManyToMany + @JoinTable()
+  - [With extra fields](https://typeorm.io/docs/relations/many-to-many-relations#many-to-many-relations-with-custom-properties) => Create a new entity and connect with @OneToMany / @ManyToOne
 
 ### Integration Notes
 
@@ -229,5 +243,3 @@ export class UserService {
 - PGUP/PGDN
 - CMD + Shift + . => main functions
 - Ctrl + Shift + Right Arrow => smart select
-
-TODO: post pagination - posts resolver with cursor and then client changes

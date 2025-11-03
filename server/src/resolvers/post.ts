@@ -10,8 +10,10 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { Post } from "../entities/post.entity";
+import { Upvote } from "../entities/upvote.entity";
 import { AuthInterceptor } from "../middleware/AuthInterceptor";
 import { PostService } from "../services/post.service";
+import { UpvoteService } from "../services/upvote.service";
 import AppDataSource from "../typeorm.config";
 import { type Context } from "../types/context.type";
 import { PostConnection } from "../types/PostConnection";
@@ -20,6 +22,7 @@ import { PostInput } from "../types/PostInput";
 @Resolver((of) => Post)
 export class PostResolver {
   private postService = new PostService(AppDataSource);
+  private upvoteService = new UpvoteService(AppDataSource);
 
   @FieldResolver(() => String)
   textSnippet(@Root() post: Post) {
@@ -29,6 +32,38 @@ export class PostResolver {
   @Query(() => Post, { nullable: true })
   post(@Arg("id", (_type) => Int) id: number): Promise<Post | null> {
     return this.postService.findById(id);
+  }
+
+  @Mutation(() => Post, { nullable: true })
+  @UseMiddleware(AuthInterceptor)
+  async vote(
+    @Arg("value", () => Int) value: number,
+    @Arg("postId", () => Int) postId: number,
+    @Ctx() { req }: Context
+  ): Promise<Post | null> {
+    let realValue;
+    if (value !== -1) {
+      realValue = 1;
+    } else {
+      realValue = -1;
+    }
+
+    const upvote = new Upvote();
+    upvote.postId = postId;
+    upvote.userId = req.session.userId!;
+    upvote.value = realValue;
+
+    await this.upvoteService.save(upvote);
+
+    const post = await this.postService.findById(postId);
+
+    if (!post) {
+      return null;
+    }
+
+    post.points = post.points + realValue;
+
+    return this.postService.save(post);
   }
 
   @Query(() => PostConnection)

@@ -4,9 +4,11 @@ import {
   Entity,
   Index,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Upvote } from "./upvote.entity";
 import { User } from "./user.entity";
 
 @ObjectType()
@@ -44,4 +46,7 @@ export class Post {
   @Field()
   @ManyToOne(() => User, (user) => user.posts)
   author!: User;
+
+  @OneToMany(() => Upvote, (upvote) => upvote.post)
+  public upvotes!: Upvote[];
 }

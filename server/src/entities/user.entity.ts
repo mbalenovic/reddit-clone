@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Post } from "./post.entity";
+import { Upvote } from "./upvote.entity";
 
 @ObjectType()
 @Entity()
@@ -36,4 +37,7 @@ export class User {
 
   @OneToMany(() => Post, (post) => post.authorId)
   posts!: Post[];
+
+  @OneToMany(() => Upvote, (upvote) => upvote.post)
+  public upvotes!: Upvote[];
 }
