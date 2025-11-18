@@ -26,21 +26,19 @@ function PostItem({
       <CardHeader>
         <CardTitle>{node.title + " by " + node.author.username}</CardTitle>
         <CardDescription>{node.text}</CardDescription>
-        <CardAction>
+        <CardAction className="flex items-center">
           <Button
-            variant={node.voteStatus === 1 ? "destructive" : "outline"}
-            size="icon-sm"
             aria-label="Upvote"
             onClick={() => handleVote(1)}
+            className={`${node.voteStatus === 1 ? "bg-red-500 hover:bg-red-500" : ""} w-6 h-6`}
           >
             <ArrowUpIcon />
           </Button>
-          <Button variant="outline" size="icon-sm">
+          <Button variant="outline" size="icon-sm" className="m-1">
             {node.points}
           </Button>
           <Button
-            variant={node.voteStatus === -1 ? "destructive" : "outline"}
-            size="icon-sm"
+            className={`${node.voteStatus === -1 ? "bg-red-500 hover:bg-red-500" : ""} w-6 h-6`}
             aria-label="Downvote"
             onClick={() => handleVote(-1)}
           >
