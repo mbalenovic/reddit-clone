@@ -8,79 +8,49 @@ export class UpvoteService extends BaseService<Upvote> {
     super(AppDataSource, Upvote);
   }
   async vote(userId: number, postId: number, value: number) {
-    const upvote = await this.find({ postId, userId });
+    return this.AppDataSource.transaction(async (em) => {
+      const existing = await em.findOne(Upvote, {
+        where: { postId, userId },
+      });
 
-    if (upvote === null) {
-      const upvote = new Upvote();
-      upvote.postId = postId;
-      upvote.userId = userId;
-      upvote.value = value;
+      let pointDelta = 0;
+      let voteStatus: number | null = null;
 
-      // save upvote and add to the points
-      return this.AppDataSource.transaction(
-        async (transactionalEntityManager) => {
-          await transactionalEntityManager.save(upvote);
+      // create new upvote
+      if (!existing) {
+        const newVote = em.create(Upvote, { userId, postId, value });
+        await em.save(newVote);
 
-          const post = await transactionalEntityManager.findOneBy(Post, {
-            id: postId,
-          });
-
-          if (!post) {
-            return null;
-          }
-
-          post.points = post.points + value;
-
-          const updatedPost = await transactionalEntityManager.save(post);
-          updatedPost.voteStatus = value;
-          return updatedPost;
-        }
-      );
-    } else {
-      if (upvote.value === value) {
-        // remove upvote and the point
-        return this.AppDataSource.transaction(
-          async (transactionalEntityManager) => {
-            await transactionalEntityManager.delete(Upvote, upvote);
-
-            const post = await transactionalEntityManager.findOneBy(Post, {
-              id: postId,
-            });
-
-            if (!post) {
-              return null;
-            }
-
-            post.points = post.points - value;
-
-            const updatedPost = await transactionalEntityManager.save(post);
-            updatedPost.voteStatus = null;
-            return updatedPost;
-          }
-        );
+        pointDelta = value;
+        voteStatus = value;
       }
 
-      // update upvote and points
-      return this.AppDataSource.transaction(
-        async (transactionalEntityManager) => {
-          upvote.value = value;
-          await transactionalEntityManager.save(upvote);
+      // remove the vote
+      else if (existing.value === value) {
+        await em.remove(existing);
 
-          const post = await transactionalEntityManager.findOneBy(Post, {
-            id: postId,
-          });
+        pointDelta = -value;
+        voteStatus = null;
+      }
 
-          if (!post) {
-            return null;
-          }
+      // switching vote (e.g., upvote → downvote)
+      else {
+        existing.value = value;
+        await em.save(existing);
 
-          post.points = post.points + 2 * value;
+        pointDelta = 2 * value;
+        voteStatus = value;
+      }
 
-          const updatedPost = await transactionalEntityManager.save(post);
-          updatedPost.voteStatus = value;
-          return updatedPost;
-        }
-      );
-    }
+      // update post points
+      const post = await em.findOne(Post, { where: { id: postId } });
+      if (!post) return null;
+
+      post.points += pointDelta;
+      const updated = await em.save(post);
+
+      (updated as any).voteStatus = voteStatus;
+      return updated;
+    });
   }
 }
