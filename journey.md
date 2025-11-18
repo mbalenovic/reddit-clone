@@ -222,6 +222,37 @@ export class UserService {
   - [With extra fields](https://typeorm.io/docs/relations/many-to-many-relations#many-to-many-relations-with-custom-properties) => Create a new entity and connect with @OneToMany / @ManyToOne
 - [Transactions](https://typeorm.io/docs/advanced-topics/transactions/) - ensures the whole logic is one operation. If one of the operations fails, all fails.
 
+#### November 04
+
+- **2h 9:32:19**
+
+#### November 05
+
+- **0.5h 9:41:34**:
+
+#### November 06
+
+- **0.5h 9:41:34**:
+
+#### November 18
+
+- **5h 10:06:06**:
+- Creating a virtual field in the data model (not stored in the database) and returning it:
+- leftJoin doesn't select any columns from it (unline leftJoinAndSelect)
+- addSelect - add an extra column to the already selected fields
+
+```
+    // Get raw + entities to attach voteStatus manually
+    const rawAndEntities = await query.getRawAndEntities();
+
+    return rawAndEntities.entities.map((post, i) => ({
+      ...post,
+      voteStatus: rawAndEntities.raw[i].voteStatus ?? null,
+    }));
+```
+
+- Posts page was reloading because notifyOnNetworkStatusChange: true means more loading states. Fixed by changing the initial loading check (loading && !data) [Core API changes](https://www.apollographql.com/docs/react/migrating/apollo-client-4-migration#core-api-changes)
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).
@@ -237,7 +268,7 @@ export class UserService {
 - [ ] Handle database exceptions in ErrorInterceptor
 - [ ] isUser.ts breaks app if the user entity is imported from @/...
 - [ ] add Zod validation
-- [ ] fix rerendering whole page when loading more Posts
+- [x] fix rerendering whole page when loading more Posts
 
 ### Keyboard shortcuts
 

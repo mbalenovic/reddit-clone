@@ -21,7 +21,7 @@ function App() {
     });
   };
 
-  if (loading) return <p>loading...</p>;
+  if (loading && !data) return <p>loading...</p>;
 
   return (
     <>
