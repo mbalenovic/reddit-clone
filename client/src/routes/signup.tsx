@@ -2,14 +2,14 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { CombinedGraphQLErrors } from "@apollo/client";
 import { useState } from "react";
 import { FieldError } from "@/gql/graphql";
-import { Route as IndexRoute } from "./index";
+import { Route as IndexRoute } from "./posts/index";
 
 export const Route = createFileRoute("/signup")({
   component: RouteComponent,
   beforeLoad: ({ context }) => {
     // Redirect if already authenticated
     if (context.auth.isAuthenticated) {
-      throw redirect({ to: "/" });
+      throw redirect({ to: IndexRoute.to });
     }
   },
 });

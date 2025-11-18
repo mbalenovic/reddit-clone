@@ -14,7 +14,8 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SigninRouteImport } from './routes/signin'
 import { Route as PasswordRecoveryRouteImport } from './routes/password-recovery'
 import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as PostsIndexRouteImport } from './routes/posts/index'
+import { Route as PostsPostIdRouteImport } from './routes/posts/$postId'
 import { Route as AuthCreatePostRouteImport } from './routes/_auth/create-post'
 
 const UpdatePasswordRoute = UpdatePasswordRouteImport.update({
@@ -41,9 +42,14 @@ const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const PostsIndexRoute = PostsIndexRouteImport.update({
+  id: '/posts/',
+  path: '/posts/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostsPostIdRoute = PostsPostIdRouteImport.update({
+  id: '/posts/$postId',
+  path: '/posts/$postId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthCreatePostRoute = AuthCreatePostRouteImport.update({
@@ -53,66 +59,73 @@ const AuthCreatePostRoute = AuthCreatePostRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
   '/password-recovery': typeof PasswordRecoveryRoute
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
   '/update-password': typeof UpdatePasswordRoute
   '/create-post': typeof AuthCreatePostRoute
+  '/posts/$postId': typeof PostsPostIdRoute
+  '/posts': typeof PostsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
   '/password-recovery': typeof PasswordRecoveryRoute
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
   '/update-password': typeof UpdatePasswordRoute
   '/create-post': typeof AuthCreatePostRoute
+  '/posts/$postId': typeof PostsPostIdRoute
+  '/posts': typeof PostsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/password-recovery': typeof PasswordRecoveryRoute
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
   '/update-password': typeof UpdatePasswordRoute
   '/_auth/create-post': typeof AuthCreatePostRoute
+  '/posts/$postId': typeof PostsPostIdRoute
+  '/posts/': typeof PostsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/password-recovery'
     | '/signin'
     | '/signup'
     | '/update-password'
     | '/create-post'
+    | '/posts/$postId'
+    | '/posts'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/password-recovery'
     | '/signin'
     | '/signup'
     | '/update-password'
     | '/create-post'
+    | '/posts/$postId'
+    | '/posts'
   id:
     | '__root__'
-    | '/'
     | '/_auth'
     | '/password-recovery'
     | '/signin'
     | '/signup'
     | '/update-password'
     | '/_auth/create-post'
+    | '/posts/$postId'
+    | '/posts/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
   PasswordRecoveryRoute: typeof PasswordRecoveryRoute
   SigninRoute: typeof SigninRoute
   SignupRoute: typeof SignupRoute
   UpdatePasswordRoute: typeof UpdatePasswordRoute
+  PostsPostIdRoute: typeof PostsPostIdRoute
+  PostsIndexRoute: typeof PostsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,11 +165,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/posts/': {
+      id: '/posts/'
+      path: '/posts'
+      fullPath: '/posts'
+      preLoaderRoute: typeof PostsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/posts/$postId': {
+      id: '/posts/$postId'
+      path: '/posts/$postId'
+      fullPath: '/posts/$postId'
+      preLoaderRoute: typeof PostsPostIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/create-post': {
@@ -180,12 +200,13 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   PasswordRecoveryRoute: PasswordRecoveryRoute,
   SigninRoute: SigninRoute,
   SignupRoute: SignupRoute,
   UpdatePasswordRoute: UpdatePasswordRoute,
+  PostsPostIdRoute: PostsPostIdRoute,
+  PostsIndexRoute: PostsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

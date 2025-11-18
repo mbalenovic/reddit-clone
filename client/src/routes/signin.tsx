@@ -7,7 +7,7 @@ import {
   useNavigate,
 } from "@tanstack/react-router";
 import { useState } from "react";
-import { Route as IndexRoute } from "./index";
+import { Route as IndexRoute } from "./posts/index";
 import { Route as PasswordRecoveryRoute } from "./password-recovery";
 
 export const Route = createFileRoute("/signin")({
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/signin")({
   beforeLoad: ({ context }) => {
     // Redirect if already authenticated
     if (context.auth.isAuthenticated) {
-      throw redirect({ to: "/" });
+      throw redirect({ to: IndexRoute.to });
     }
   },
 });

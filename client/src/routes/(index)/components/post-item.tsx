@@ -9,6 +9,8 @@ import {
 import { PostsQuery } from "@/gql/graphql";
 import { useVoteMutation } from "@/graphql/mutations/useVoteMutation";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
+import { Route as PostRoute } from "@/routes/posts/$postId";
+import { Link } from "@tanstack/react-router";
 
 function PostItem({
   node,
@@ -22,9 +24,11 @@ function PostItem({
   }
 
   return (
-    <Card key={node.id} className="mt-2">
+    <Card className="mt-2">
       <CardHeader>
-        <CardTitle>{node.title + " by " + node.author.username}</CardTitle>
+        <Link to={PostRoute.to} params={{ postId: node.id.toString() }}>
+          <CardTitle>{node.title + " by " + node.author.username}</CardTitle>
+        </Link>
         <CardDescription>{node.text}</CardDescription>
         <CardAction className="flex items-center">
           <Button

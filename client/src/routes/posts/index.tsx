@@ -4,7 +4,7 @@ import { usePostsQuery } from "@/graphql/queries/usePostsQuery";
 import { Route as PostCreateRoute } from "@/routes/_auth/create-post";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/posts/")({
   component: App,
 });
 

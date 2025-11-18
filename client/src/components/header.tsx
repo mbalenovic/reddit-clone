@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Route as SigninRoute } from "../routes/signin";
 import { Route as SignupRoute } from "../routes/signup";
+import { Route as PostsRoute } from "../routes/posts/index";
 import { useAuth } from "@/auth";
 import {
   DropdownMenu,
@@ -17,12 +18,12 @@ const Header = () => {
 
   async function handleLogout() {
     await auth.logout();
-    navigate({ to: "/" });
+    navigate({ to: PostsRoute.to });
   }
 
   return (
     <div className="flex justify-start items-center bg-teal-300 p-4 sticky top-0">
-      <Link to={"/"}>Posts</Link>
+      <Link to={PostsRoute.to}>Posts</Link>
 
       <div className="ml-auto">
         {auth.isAuthenticated ? (
