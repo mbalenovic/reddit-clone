@@ -9,5 +9,6 @@ export const PostFragment = graphql(`
     text
     points
     authorId
+    voteStatus
   }
 `);

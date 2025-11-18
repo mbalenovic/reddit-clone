@@ -10,7 +10,6 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { Post } from "../entities/post.entity";
-import { Upvote } from "../entities/upvote.entity";
 import { AuthInterceptor } from "../middleware/AuthInterceptor";
 import { PostService } from "../services/post.service";
 import { UpvoteService } from "../services/upvote.service";
@@ -19,7 +18,7 @@ import { type Context } from "../types/context.type";
 import { PostConnection } from "../types/PostConnection";
 import { PostInput } from "../types/PostInput";
 
-@Resolver((of) => Post)
+@Resolver(() => Post)
 export class PostResolver {
   private postService = new PostService(AppDataSource);
   private upvoteService = new UpvoteService(AppDataSource);
@@ -41,41 +40,31 @@ export class PostResolver {
     @Arg("postId", () => Int) postId: number,
     @Ctx() { req }: Context
   ): Promise<Post | null> {
-    let realValue;
+    let realValue: number;
     if (value !== -1) {
       realValue = 1;
     } else {
       realValue = -1;
     }
 
-    const upvote = new Upvote();
-    upvote.postId = postId;
-    upvote.userId = req.session.userId!;
-    upvote.value = realValue;
-
-    return AppDataSource.transaction(async (transactionalEntityManager) => {
-      await transactionalEntityManager.save(upvote);
-
-      const post = await transactionalEntityManager.findOneBy(Post, {
-        id: postId,
-      });
-
-      if (!post) {
-        return null;
-      }
-
-      post.points = post.points + realValue;
-
-      return transactionalEntityManager.save(post);
-    });
+    return await this.upvoteService.vote(
+      req.session.userId!,
+      postId,
+      realValue
+    );
   }
 
   @Query(() => PostConnection)
   async posts(
     @Arg("first") first: number,
-    @Arg("after", () => String, { nullable: true }) after: string | null
+    @Arg("after", () => String, { nullable: true }) after: string | null,
+    @Ctx() { req }: Context
   ): Promise<PostConnection> {
-    const posts = await this.postService.getPosts(first, after);
+    const posts = await this.postService.getPosts(
+      first,
+      req.session.userId || null,
+      after
+    );
 
     const hasNextPage = posts.length > first;
     const slicedPosts = posts.slice(0, first);

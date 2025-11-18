@@ -15,7 +15,7 @@ export class Upvote {
   postId!: number;
 
   @Field(() => Int)
-  @Column({ default: 0 })
+  @Column()
   value!: number;
 
   @ManyToOne(() => User, (user) => user.upvotes)

@@ -7,7 +7,7 @@ export class PostService extends BaseService<Post> {
     super(AppDataSource, Post);
   }
 
-  async getPosts(first: number, after: string | null) {
+  async getPosts(first: number, userId: number | null, after: string | null) {
     const query = this.repository
       .createQueryBuilder("post")
       .orderBy("post.createdAt", "DESC")
@@ -18,6 +18,23 @@ export class PostService extends BaseService<Post> {
       query.where({ createdAt: LessThan(new Date(after)) });
     }
 
-    return query.getMany();
+    if (userId) {
+      query
+        .leftJoin(
+          "post.upvotes",
+          "upvote",
+          "upvote.postId = post.id AND upvote.userId = :userId",
+          { userId }
+        )
+        .addSelect("upvote.value", "voteStatus");
+    }
+
+    // Get raw + entities to attach voteStatus manually
+    const rawAndEntities = await query.getRawAndEntities();
+
+    return rawAndEntities.entities.map((post, i) => ({
+      ...post,
+      voteStatus: rawAndEntities.raw[i].voteStatus ?? null,
+    }));
   }
 }

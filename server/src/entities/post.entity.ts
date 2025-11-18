@@ -43,6 +43,9 @@ export class Post {
   @Column()
   authorId!: number;
 
+  @Field(() => Int, { nullable: true })
+  voteStatus!: number | null;
+
   @Field()
   @ManyToOne(() => User, (user) => user.posts)
   author!: User;
