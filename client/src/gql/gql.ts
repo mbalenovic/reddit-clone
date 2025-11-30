@@ -24,6 +24,7 @@ type Documents = {
     "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": typeof types.RegisterDocument,
     "\n  mutation Vote($postId: Int!, $value: Int!) {\n    vote(postId: $postId, value: $value) {\n      id\n      points\n      voteStatus\n    }\n  }\n": typeof types.VoteDocument,
     "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n": typeof types.QueryDocument,
+    "\n  query Post($id: Int!) {\n    post(id: $id) {\n      ...PostFragment\n      author {\n        id\n        username\n      }\n    }\n  }\n": typeof types.PostDocument,
     "\n  query Posts($first: Float!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        node {\n          ...PostFragment\n          author {\n            username\n          }\n        }\n        cursor\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n": typeof types.PostsDocument,
     "\n  query User($userId: Float!) {\n    user(userId: $userId) {\n      ...UserFragment\n    }\n  }\n": typeof types.UserDocument,
 };
@@ -38,6 +39,7 @@ const documents: Documents = {
     "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": types.RegisterDocument,
     "\n  mutation Vote($postId: Int!, $value: Int!) {\n    vote(postId: $postId, value: $value) {\n      id\n      points\n      voteStatus\n    }\n  }\n": types.VoteDocument,
     "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n": types.QueryDocument,
+    "\n  query Post($id: Int!) {\n    post(id: $id) {\n      ...PostFragment\n      author {\n        id\n        username\n      }\n    }\n  }\n": types.PostDocument,
     "\n  query Posts($first: Float!, $after: String) {\n    posts(first: $first, after: $after) {\n      edges {\n        node {\n          ...PostFragment\n          author {\n            username\n          }\n        }\n        cursor\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n": types.PostsDocument,
     "\n  query User($userId: Float!) {\n    user(userId: $userId) {\n      ...UserFragment\n    }\n  }\n": types.UserDocument,
 };
@@ -96,6 +98,10 @@ export function graphql(source: "\n  mutation Vote($postId: Int!, $value: Int!) 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n"): (typeof documents)["\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query Post($id: Int!) {\n    post(id: $id) {\n      ...PostFragment\n      author {\n        id\n        username\n      }\n    }\n  }\n"): (typeof documents)["\n  query Post($id: Int!) {\n    post(id: $id) {\n      ...PostFragment\n      author {\n        id\n        username\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

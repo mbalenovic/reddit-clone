@@ -1,3 +1,4 @@
+import { usePostQuery } from "@/graphql/queries/usePostQuery";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/posts/$postId")({
@@ -8,5 +9,14 @@ export const Route = createFileRoute("/posts/$postId")({
 
 function PostComponent() {
   const { postId } = Route.useParams();
-  return <div>Post ID: {postId}</div>;
+  const { data } = usePostQuery({ id: parseInt(postId) });
+
+  if (!data?.post) return <p>No post.</p>;
+
+  return (
+    <div>
+      <h2>{data.post.title}</h2>
+      <p>{data.post.text}</p>
+    </div>
+  );
 }

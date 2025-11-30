@@ -253,6 +253,12 @@ export class UserService {
 
 - Posts page was reloading because notifyOnNetworkStatusChange: true means more loading states. Fixed by changing the initial loading check (loading && !data) [Core API changes](https://www.apollographql.com/docs/react/migrating/apollo-client-4-migration#core-api-changes)
 
+#### November 26
+
+- **1h 10:14:42**:
+- Got stuck a little bit cause findBy returns an array, but I needed one post. Should've used findOneBy
+- post query doesn't return author's email cause @FieldResolver email checks for authenticated user match
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).
@@ -269,6 +275,7 @@ export class UserService {
 - [ ] isUser.ts breaks app if the user entity is imported from @/...
 - [ ] add Zod validation
 - [x] fix rerendering whole page when loading more Posts
+- [ ] password recovery bug after submitting new password?
 
 ### Keyboard shortcuts
 

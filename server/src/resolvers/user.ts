@@ -24,7 +24,6 @@ export class UserResolver {
 
   @FieldResolver(() => String)
   email(@Root() user: User, @Ctx() { req }: Context) {
-    console.log(req.session.userId, user.id);
     if (req.session.userId === user.id) {
       return user.email;
     }

@@ -7,6 +7,17 @@ export class PostService extends BaseService<Post> {
     super(AppDataSource, Post);
   }
 
+  async findById(id: number): Promise<Post | null> {
+    const posts = await this.repository.find({
+      relations: { author: true },
+      where: {
+        id,
+      },
+    });
+
+    return posts[0] ?? null;
+  }
+
   async getPosts(first: number, userId: number | null, after: string | null) {
     const query = this.repository
       .createQueryBuilder("post")
