@@ -23,6 +23,7 @@ type Documents = {
     "\n  mutation PasswordRecovery($email: String!) {\n    passwordRecovery(email: $email)\n  }\n": typeof types.PasswordRecoveryDocument,
     "\n  mutation UpdatePassword($recoveryToken: String!, $password: String!) {\n    updatePassword(recoveryToken: $recoveryToken, password: $password)\n  }\n": typeof types.UpdatePasswordDocument,
     "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": typeof types.RegisterDocument,
+    "\n  mutation UpdatePost($id: Int!, $title: String!, $text: String!) {\n    updatePost(id: $id, title: $title, text: $text) {\n      ...PostFragment\n    }\n  }\n": typeof types.UpdatePostDocument,
     "\n  mutation Vote($postId: Int!, $value: Int!) {\n    vote(postId: $postId, value: $value) {\n      id\n      points\n      voteStatus\n    }\n  }\n": typeof types.VoteDocument,
     "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n": typeof types.QueryDocument,
     "\n  query Post($id: Int!) {\n    post(id: $id) {\n      ...PostFragment\n      author {\n        id\n        username\n      }\n    }\n  }\n": typeof types.PostDocument,
@@ -39,6 +40,7 @@ const documents: Documents = {
     "\n  mutation PasswordRecovery($email: String!) {\n    passwordRecovery(email: $email)\n  }\n": types.PasswordRecoveryDocument,
     "\n  mutation UpdatePassword($recoveryToken: String!, $password: String!) {\n    updatePassword(recoveryToken: $recoveryToken, password: $password)\n  }\n": types.UpdatePasswordDocument,
     "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": types.RegisterDocument,
+    "\n  mutation UpdatePost($id: Int!, $title: String!, $text: String!) {\n    updatePost(id: $id, title: $title, text: $text) {\n      ...PostFragment\n    }\n  }\n": types.UpdatePostDocument,
     "\n  mutation Vote($postId: Int!, $value: Int!) {\n    vote(postId: $postId, value: $value) {\n      id\n      points\n      voteStatus\n    }\n  }\n": types.VoteDocument,
     "\n  query Query {\n    me {\n      ...UserFragment\n    }\n  }\n": types.QueryDocument,
     "\n  query Post($id: Int!) {\n    post(id: $id) {\n      ...PostFragment\n      author {\n        id\n        username\n      }\n    }\n  }\n": types.PostDocument,
@@ -96,6 +98,10 @@ export function graphql(source: "\n  mutation UpdatePassword($recoveryToken: Str
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation Register($userInput: UserInput!) {\n    register(userInput: $userInput) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdatePost($id: Int!, $title: String!, $text: String!) {\n    updatePost(id: $id, title: $title, text: $text) {\n      ...PostFragment\n    }\n  }\n"): (typeof documents)["\n  mutation UpdatePost($id: Int!, $title: String!, $text: String!) {\n    updatePost(id: $id, title: $title, text: $text) {\n      ...PostFragment\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

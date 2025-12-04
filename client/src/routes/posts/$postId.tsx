@@ -5,6 +5,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Route as PostsRoute } from "@/routes/posts/index";
 import { useState } from "react";
 import { useAuth } from "@/auth";
+import PostUpdateForm from "./(post)/components/post-update-form";
 
 export const Route = createFileRoute("/posts/$postId")({
   // In a loader
@@ -19,6 +20,7 @@ function PostComponent() {
   const [deletePost] = useDeletePostMutation(parseInt(postId));
   const [error, setError] = useState(false);
   const { user } = useAuth();
+  const [updateView, setUpdateView] = useState(false);
 
   async function handleDelete() {
     const result = await deletePost();
@@ -28,17 +30,39 @@ function PostComponent() {
     setError(true);
   }
 
+  function handleUpdateView() {
+    setUpdateView((prev) => !prev);
+  }
+
   if (!data?.post) return <p>No post.</p>;
 
   return (
     <div>
-      <h2>{data.post.title}</h2>
-      <p>{data.post.text}</p>
-
-      {user?.id === data.post.authorId && (
+      {updateView ? (
+        <PostUpdateForm
+          title={data.post.title}
+          text={data.post.text}
+          handleUpdateView={handleUpdateView}
+          id={parseInt(postId)}
+        />
+      ) : (
         <>
-          <Button onClick={handleDelete}>Delete</Button>
-          {error && <p>Error deleting the post.</p>}
+          <h2>{data.post.title}</h2>
+          <p>{data.post.text}</p>
+          {user?.id === data.post.authorId && (
+            <>
+              <div className="mt-2">
+                <Button onClick={handleDelete}>Delete</Button>
+                {error && <p>Error deleting the post.</p>}
+                <Button
+                  onClick={handleUpdateView}
+                  className={`${!updateView && "ml-2"}`}
+                >
+                  Edit
+                </Button>
+              </div>
+            </>
+          )}
         </>
       )}
     </div>
