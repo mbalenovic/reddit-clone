@@ -17,6 +17,7 @@ type Documents = {
     "\n  fragment PostFragment on Post {\n    id\n    createdAt\n    updatedAt\n    title\n    text\n    points\n    authorId\n    voteStatus\n  }\n": typeof types.PostFragmentFragmentDoc,
     "\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n    email\n  }\n": typeof types.UserFragmentFragmentDoc,
     "\n  mutation CreatePost($postInput: PostInput!) {\n    createPost(postInput: $postInput) {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n      points\n      authorId\n    }\n  }\n": typeof types.CreatePostDocument,
+    "\n  mutation DeletePost($id: Int!) {\n    deletePost(id: $id)\n  }\n": typeof types.DeletePostDocument,
     "\n  mutation Login($userInputLogin: UserInputLogin!) {\n    login(userInputLogin: $userInputLogin) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": typeof types.LoginDocument,
     "\n  mutation Logout {\n    logout\n  }\n": typeof types.LogoutDocument,
     "\n  mutation PasswordRecovery($email: String!) {\n    passwordRecovery(email: $email)\n  }\n": typeof types.PasswordRecoveryDocument,
@@ -32,6 +33,7 @@ const documents: Documents = {
     "\n  fragment PostFragment on Post {\n    id\n    createdAt\n    updatedAt\n    title\n    text\n    points\n    authorId\n    voteStatus\n  }\n": types.PostFragmentFragmentDoc,
     "\n  fragment UserFragment on User {\n    id\n    createdAt\n    updatedAt\n    username\n    email\n  }\n": types.UserFragmentFragmentDoc,
     "\n  mutation CreatePost($postInput: PostInput!) {\n    createPost(postInput: $postInput) {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n      points\n      authorId\n    }\n  }\n": types.CreatePostDocument,
+    "\n  mutation DeletePost($id: Int!) {\n    deletePost(id: $id)\n  }\n": types.DeletePostDocument,
     "\n  mutation Login($userInputLogin: UserInputLogin!) {\n    login(userInputLogin: $userInputLogin) {\n      errors {\n        field\n        message\n      }\n      user {\n        ...UserFragment\n      }\n    }\n  }\n": types.LoginDocument,
     "\n  mutation Logout {\n    logout\n  }\n": types.LogoutDocument,
     "\n  mutation PasswordRecovery($email: String!) {\n    passwordRecovery(email: $email)\n  }\n": types.PasswordRecoveryDocument,
@@ -70,6 +72,10 @@ export function graphql(source: "\n  fragment UserFragment on User {\n    id\n  
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation CreatePost($postInput: PostInput!) {\n    createPost(postInput: $postInput) {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n      points\n      authorId\n    }\n  }\n"): (typeof documents)["\n  mutation CreatePost($postInput: PostInput!) {\n    createPost(postInput: $postInput) {\n      id\n      createdAt\n      updatedAt\n      title\n      text\n      points\n      authorId\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation DeletePost($id: Int!) {\n    deletePost(id: $id)\n  }\n"): (typeof documents)["\n  mutation DeletePost($id: Int!) {\n    deletePost(id: $id)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

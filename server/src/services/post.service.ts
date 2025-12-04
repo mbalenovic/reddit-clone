@@ -48,4 +48,18 @@ export class PostService extends BaseService<Post> {
       voteStatus: rawAndEntities.raw[i].voteStatus ?? null,
     }));
   }
+
+  async removeByUser(id: number, userId: number): Promise<boolean> {
+    const post = await this.findById(id);
+
+    if (post?.authorId !== userId) return false;
+
+    if (!post) {
+      return false;
+    }
+
+    const result = await this.repo.remove(post);
+
+    return result ? true : false;
+  }
 }

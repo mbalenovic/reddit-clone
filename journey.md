@@ -259,6 +259,11 @@ export class UserService {
 - Got stuck a little bit cause findBy returns an array, but I needed one post. Should've used findOneBy
 - post query doesn't return author's email cause @FieldResolver email checks for authenticated user match
 
+#### November 30
+
+- **2h 10:38:12**:
+- Post remove failed cause its referenced from the table upvote. onDelete: "CASCADE" or delete upvotes before deleting the post
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).

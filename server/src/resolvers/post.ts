@@ -117,8 +117,14 @@ export class PostResolver {
     return post;
   }
 
-  @Mutation(() => Number)
-  async deletePost(@Arg("id", () => Int) id: number): Promise<Post | null> {
-    return this.postService.remove(id);
+  @Mutation(() => Boolean)
+  @UseMiddleware(AuthInterceptor)
+  async deletePost(
+    @Arg("id", () => Int) id: number,
+    @Ctx() { req }: Context
+  ): Promise<boolean> {
+    const post = await this.postService.removeByUser(id, req.session.userId!);
+
+    return post ? true : false;
   }
 }

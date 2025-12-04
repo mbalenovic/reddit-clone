@@ -1,5 +1,10 @@
+import { Button } from "@/components/ui/button";
+import { useDeletePostMutation } from "@/graphql/mutations/useDeletePostMutation";
 import { usePostQuery } from "@/graphql/queries/usePostQuery";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Route as PostsRoute } from "@/routes/posts/index";
+import { useState } from "react";
+import { useAuth } from "@/auth";
 
 export const Route = createFileRoute("/posts/$postId")({
   // In a loader
@@ -8,8 +13,20 @@ export const Route = createFileRoute("/posts/$postId")({
 });
 
 function PostComponent() {
+  const navigate = useNavigate();
   const { postId } = Route.useParams();
   const { data } = usePostQuery({ id: parseInt(postId) });
+  const [deletePost] = useDeletePostMutation(parseInt(postId));
+  const [error, setError] = useState(false);
+  const { user } = useAuth();
+
+  async function handleDelete() {
+    const result = await deletePost();
+
+    if (result.data?.deletePost) navigate({ to: PostsRoute.to });
+
+    setError(true);
+  }
 
   if (!data?.post) return <p>No post.</p>;
 
@@ -17,6 +34,13 @@ function PostComponent() {
     <div>
       <h2>{data.post.title}</h2>
       <p>{data.post.text}</p>
+
+      {user?.id === data.post.authorId && (
+        <>
+          <Button onClick={handleDelete}>Delete</Button>
+          {error && <p>Error deleting the post.</p>}
+        </>
+      )}
     </div>
   );
 }
