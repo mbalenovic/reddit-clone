@@ -2,8 +2,6 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { QueryQuery, User, UserInput, UserInputLogin } from "./gql/graphql";
 import { useLoginMutation } from "./graphql/mutations/useLoginMutation";
 import { AuthState } from "./types/AuthState";
-import { redirect } from "@tanstack/react-router";
-import { Route as SigninRoute } from "./routes/signin";
 import { useLogoutMutation } from "./graphql/mutations/useLogoutMutation";
 import { useRegisterMutation } from "./graphql/mutations/useRegisterMutation";
 
@@ -43,14 +41,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (data.data.me?.id) {
           setUser(data.data.me);
           setIsAuthenticated(true);
-        } else {
-          throw redirect({
-            to: SigninRoute.to,
-            search: {
-              // Save current location for redirect after login
-              redirect: location.href,
-            },
-          });
         }
       })
       .catch((e) => console.log(e))
@@ -58,15 +48,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(false);
       });
   }, []);
-
-  // Show loading state while checking auth
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        Loading...
-      </div>
-    );
-  }
 
   const login = async (
     usernameOrEmail: UserInputLogin["usernameOrEmail"],
@@ -118,7 +99,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         register,
       }}
     >
-      {children}
+      {isLoading ? (
+        <div className="flex items-center justify-center min-h-screen">
+          Loading...
+        </div>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 }
