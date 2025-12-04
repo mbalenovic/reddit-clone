@@ -97,24 +97,15 @@ export class PostResolver {
     return await this.postService.save({ ...post, ...postInput });
   }
 
-  @Mutation(() => Post)
+  @Mutation(() => Post, { nullable: true })
+  @UseMiddleware(AuthInterceptor)
   async updatePost(
     @Arg("id", () => Int) id: number,
-    @Arg("title", () => String) title: string
+    @Arg("title", () => String) title: string,
+    @Arg("text", () => String) text: string,
+    @Ctx() { req }: Context
   ): Promise<Post | null> {
-    const post = await this.postService.findById(id);
-    if (!post) {
-      return null;
-    }
-
-    if (typeof title !== "undefined") {
-      const newPost = new Post();
-      newPost.title = title;
-
-      await this.postService.save(newPost);
-    }
-
-    return post;
+    return this.postService.updatePost(id, title, text, req.session.userId!);
   }
 
   @Mutation(() => Boolean)

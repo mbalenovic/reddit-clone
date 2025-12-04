@@ -62,4 +62,28 @@ export class PostService extends BaseService<Post> {
 
     return result ? true : false;
   }
+
+  async updatePost(id: number, title: string, text: string, userId: number) {
+    const post = await this.findById(id);
+
+    if (!post) {
+      return null;
+    }
+
+    if (post.authorId !== userId) {
+      return null;
+    }
+
+    if (typeof title !== "undefined") {
+      post.title = title;
+    }
+
+    if (typeof text !== "undefined") {
+      post.text = text;
+    }
+
+    await this.save(post);
+
+    return post;
+  }
 }
