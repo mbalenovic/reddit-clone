@@ -264,6 +264,23 @@ export class UserService {
 - **2h 10:38:12**:
 - Post remove failed cause its referenced from the table upvote. onDelete: "CASCADE" or delete upvotes before deleting the post
 
+#### December 03
+
+- **2.5h 11:14:28**:
+- Fixed unstable AuthContext.Provider - early return when loading doesn't render AuthContext.
+- Instead of .leftJoinAndSelect author or adding author as relations, we could just define a @FieldResolver, but it performs badly. N+1 problem (if there was 100 posts, it would run 100 SQL statements to get a creator). [third party dependency solution](https://www.npmjs.com/package/dataloader)
+
+```
+  @FieldResolver(() => User)
+  author(@Root() post: Post, @Ctx() { userLoader }: Context) {
+    return userLoader.load(post.authorId);
+  }
+```
+
+#### December 21
+
+- **1.5h 11:27:28**:
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).

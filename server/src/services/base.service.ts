@@ -1,6 +1,7 @@
 import {
   DataSource,
   FindOptionsWhere,
+  In,
   ObjectLiteral,
   Repository,
 } from "typeorm";
@@ -21,6 +22,10 @@ export abstract class BaseService<T extends ObjectLiteral> {
 
   async findById(id: number): Promise<T | null> {
     return this.repo.findOneBy({ id } as any);
+  }
+
+  async findByIds(ids: readonly number[]): Promise<T[]> {
+    return this.repo.findBy({ id: In(ids) } as any);
   }
 
   async find(

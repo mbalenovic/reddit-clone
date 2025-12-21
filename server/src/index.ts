@@ -16,6 +16,7 @@ import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
 import AppDataSource from "./typeorm.config";
 import { Context } from "./types/context.type";
+import { createUserLoader } from "./utils/createUserLoader";
 
 async function main() {
   try {
@@ -60,6 +61,8 @@ async function main() {
     })
   );
 
+  const userLoader = createUserLoader();
+
   app.use(
     "/",
     session({
@@ -81,6 +84,7 @@ async function main() {
         req,
         res,
         redisStore,
+        userLoader,
       }),
     })
   );

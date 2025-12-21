@@ -9,7 +9,8 @@ export class PostService extends BaseService<Post> {
 
   async findById(id: number): Promise<Post | null> {
     const posts = await this.repository.find({
-      relations: { author: true },
+      // Replaced by @FieldResolver(() => User)
+      // relations: { author: true },
       where: {
         id,
       },
@@ -22,8 +23,9 @@ export class PostService extends BaseService<Post> {
     const query = this.repository
       .createQueryBuilder("post")
       .orderBy("post.createdAt", "DESC")
-      .limit(first + 1)
-      .leftJoinAndSelect("post.author", "author");
+      .limit(first + 1);
+    // Replaced by @FieldResolver(() => User)
+    // .leftJoinAndSelect("post.author", "author");
 
     if (after) {
       query.where({ createdAt: LessThan(new Date(after)) });

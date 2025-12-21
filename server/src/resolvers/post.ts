@@ -10,9 +10,11 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { Post } from "../entities/post.entity";
+import { User } from "../entities/user.entity";
 import { AuthInterceptor } from "../middleware/AuthInterceptor";
 import { PostService } from "../services/post.service";
 import { UpvoteService } from "../services/upvote.service";
+import { UserService } from "../services/user.service";
 import AppDataSource from "../typeorm.config";
 import { type Context } from "../types/context.type";
 import { PostConnection } from "../types/PostConnection";
@@ -20,12 +22,18 @@ import { PostInput } from "../types/PostInput";
 
 @Resolver(() => Post)
 export class PostResolver {
+  private userService = new UserService(AppDataSource);
   private postService = new PostService(AppDataSource);
   private upvoteService = new UpvoteService(AppDataSource);
 
   @FieldResolver(() => String)
   textSnippet(@Root() post: Post) {
     return post.text.slice(0, 20);
+  }
+
+  @FieldResolver(() => User)
+  author(@Root() post: Post, @Ctx() { userLoader }: Context) {
+    return userLoader.load(post.authorId);
   }
 
   @Query(() => Post, { nullable: true })
