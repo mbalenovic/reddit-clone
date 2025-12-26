@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { useApolloClient } from "@apollo/client/react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { QueryQuery, User, UserInput, UserInputLogin } from "./gql/graphql";
 import { useLoginMutation } from "./graphql/mutations/useLoginMutation";
-import { AuthState } from "./types/AuthState";
 import { useLogoutMutation } from "./graphql/mutations/useLogoutMutation";
 import { useRegisterMutation } from "./graphql/mutations/useRegisterMutation";
+import { AuthState } from "./types/AuthState";
 
 const AuthContext = createContext<AuthState | undefined>(undefined);
 
@@ -14,6 +15,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loginUser] = useLoginMutation();
   const [registerUser] = useRegisterMutation();
   const [logoutUser] = useLogoutMutation();
+  const client = useApolloClient();
 
   // Restore auth state on app load
   useEffect(() => {
@@ -60,6 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (response.data?.login.user?.id) {
       setUser(response.data.login.user);
       setIsAuthenticated(true);
+      await client.resetStore();
     }
 
     return response;
@@ -87,6 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticated(false);
 
     await logoutUser();
+    await client.resetStore();
   };
 
   return (
