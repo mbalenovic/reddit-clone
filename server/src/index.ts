@@ -3,6 +3,7 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { expressMiddleware } from "@as-integrations/express5";
 import { RedisStore } from "connect-redis";
 import cors from "cors";
+import "dotenv/config";
 import express from "express";
 import session from "express-session";
 import http from "http";
@@ -21,14 +22,14 @@ import { createUserLoader } from "./utils/createUserLoader";
 async function main() {
   try {
     await AppDataSource.initialize();
+    await AppDataSource.runMigrations();
   } catch (error) {
     console.log(error);
   }
-
   const app = express();
 
   // Initialize client.
-  let redisClient = createClient();
+  let redisClient = createClient({ url: process.env.REDIS_URL! });
   redisClient.connect().catch(console.error);
 
   // Initialize store.
@@ -42,7 +43,7 @@ async function main() {
 
   const schema = await buildSchema({
     resolvers: [PostResolver, UserResolver],
-    emitSchemaFile: path.resolve(__dirname, "schema.graphql"),
+    emitSchemaFile: isDev ? path.resolve(__dirname, "schema.graphql") : false,
     validate: true,
     globalMiddlewares: [ErrorInterceptor],
   });
@@ -53,10 +54,10 @@ async function main() {
   });
 
   await apolloServer.start();
-
+  app.set("proxy", 1);
   app.use(
     cors({
-      origin: "http://localhost:3000",
+      origin: process.env.CORS_ORIGIN,
       credentials: true,
     })
   );
@@ -70,7 +71,7 @@ async function main() {
       store: redisStore,
       resave: false, // required: force lightweight session keep alive (touch)
       saveUninitialized: false, // recommended: only save session when data exists
-      secret: "jkdsfkljdas9034u4j2ioj4kl",
+      secret: process.env.REDIS_SECRET!,
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // ten years
         httpOnly: true,
@@ -90,7 +91,7 @@ async function main() {
   );
 
   await new Promise<void>((resolve) =>
-    httpServer.listen({ port: 4000 }, resolve)
+    httpServer.listen({ port: process.env.PORT || 4000 }, resolve)
   );
   console.log(`🚀 Server ready at http://localhost:4000/`);
 }

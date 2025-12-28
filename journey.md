@@ -279,13 +279,38 @@ export class UserService {
 
 #### December 21
 
-- **1.5h 11:27:28**:
+- **1.5h 11:27:28**
+
+#### December 26
+
+- **1h 11:48:56**:
+- ApolloClient client.resetStore() on login/logout to clear the cache and reexecute all the active queries
+
+#### December 27
+
+- **3h 12:22:56**:
+- Issue with building the container [forum](https://forums.docker.com/t/docker-credential-desktop-exe-executable-file-not-found-in-path-using-wsl2/100225)
+- The second issue was "tsc not found" during build. The issue was missing typescript devDependency.
+- The third issue was creating initial migration. The final command was `npx typeorm-ts-node-commonjs migration:generate ./src/migrations/InitialMigration -d ./src/typeorm.config.ts` and it required process.env.DB_URL replaced with the string, synchronize turned off, and a fresh database without tables.
+- Added `app.set("proxy", 1)` to account for nginx
+- To push the image to Docker Hub repo, you have to name the tag after the repo name.
+
+#### December 28
+
+- **1.5h 12:36:40**:
+- Docker giving a missleading error message when the image has been built for the different platform. Solved by building the image for multiple platforms `docker buildx build --platform linux/amd64,linux/arm64 -t milac0/reddit:1 --push .`
+- Disabled schema.graphql file creation (emitSchemaFile dev only)
+- Fixed env var name to match dokku's name (DATABASE_URL) [link](https://dokku.com/docs/configuration/environment-variables/)
+- Added a domain [link](https://dokku.com/docs/configuration/domains/?h=domain)
+- Opened a port `dokku ports:add http:80:8080` [link](https://dokku.com/docs/networking/port-management/?h=port)
+- Enabled SSL [link](https://github.com/dokku/dokku-letsencrypt)
 
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).
 - Converted entities into GraphQL types using `@ObjectType()` and `@Field()`.
 - Referenced a [TypeGraphQL and MikroORM example](https://github.com/MichalLytek/type-graphql/tree/v2.0.0-rc.2/examples/mikro-orm).
+- [Containerize a Node.js app](https://docs.docker.com/guides/nodejs/containerize/)
 
 ### Actionables
 

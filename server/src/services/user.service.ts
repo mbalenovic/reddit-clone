@@ -61,6 +61,7 @@ export class UserService extends BaseService<User> {
       expiration: { type: "EX", value: 1000 * 60 * 60 * 24 },
     });
 
+    // TODO: update href
     const href = `http://localhost:3000/update-password?recoveryToken=${token}`;
 
     await sendEmail(

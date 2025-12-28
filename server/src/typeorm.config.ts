@@ -7,11 +7,7 @@ import { User } from "./entities/user.entity";
 
 const AppDataSource = new DataSource({
   type: "postgres",
-  host: "localhost",
-  port: 5432,
-  username: "postgres",
-  password: "postgres",
-  database: "reddit",
+  url: process.env.DATABASE_URL!,
   synchronize: isDev,
   logging: true,
   entities: [Post, User, Upvote],
