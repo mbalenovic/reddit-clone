@@ -54,7 +54,7 @@ async function main() {
   });
 
   await apolloServer.start();
-  app.set("proxy", 1);
+  app.set("trust proxy", 1);
   app.use(
     cors({
       origin: process.env.CORS_ORIGIN,
@@ -76,7 +76,7 @@ async function main() {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // ten years
         httpOnly: true,
         secure: !isDev,
-        sameSite: "lax",
+        sameSite: "none",
       },
     }),
     express.json(),
