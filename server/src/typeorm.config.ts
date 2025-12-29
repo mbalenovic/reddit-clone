@@ -4,6 +4,7 @@ import { Post } from "./entities/post.entity";
 import { isDev } from "./constants";
 import { Upvote } from "./entities/upvote.entity";
 import { User } from "./entities/user.entity";
+import { InitialMigration1766872354460 } from "./migrations/1766872354460-InitialMigration";
 
 const AppDataSource = new DataSource({
   type: "postgres",
@@ -12,7 +13,7 @@ const AppDataSource = new DataSource({
   logging: true,
   entities: [Post, User, Upvote],
   subscribers: [],
-  migrations: [],
+  migrations: [InitialMigration1766872354460],
 });
 
 export default AppDataSource;
