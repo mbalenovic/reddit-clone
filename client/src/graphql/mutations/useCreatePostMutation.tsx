@@ -18,7 +18,7 @@ const CREATE_POST = graphql(`
 
 export function useCreatePostMutation() {
   return useMutation(CREATE_POST, {
-    refetchQueries: [{ query: POSTS }],
+    refetchQueries: [{ query: POSTS, variables: { first: 10 } }],
     // OR update cache
     // update(cache, { data }) {
     //   if (!data?.createPost) return;
