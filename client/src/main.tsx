@@ -1,16 +1,16 @@
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 
-import "./styles.css";
-import reportWebVitals from "./reportWebVitals.ts";
-import { AuthProvider, useAuth } from "./auth.tsx";
-import { ApolloProvider } from "@apollo/client/react";
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client/react";
 import { relayStylePagination } from "@apollo/client/utilities";
+import { AuthProvider, useAuth } from "./auth.tsx";
+import reportWebVitals from "./reportWebVitals.ts";
+import "./styles.css";
 
 // Create a new router instance
 const router = createRouter({
@@ -37,7 +37,7 @@ function InnerApp() {
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: "http://localhost:4000/graphql",
+    uri: import.meta.env.VITE_GRAPHQL_URL,
     credentials: "include",
   }),
   cache: new InMemoryCache({

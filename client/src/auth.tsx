@@ -19,7 +19,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Restore auth state on app load
   useEffect(() => {
-    fetch("http://localhost:4000/graphql", {
+    fetch(import.meta.env.VITE_GRAPHQL_URL!, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
