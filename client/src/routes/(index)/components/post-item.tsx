@@ -1,16 +1,10 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardAction,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { PostsQuery } from "@/gql/graphql";
 import { useVoteMutation } from "@/graphql/mutations/useVoteMutation";
-import { ArrowBigDown, ArrowBigUp } from "lucide-react";
 import { Route as PostRoute } from "@/routes/posts/$postId";
 import { Link } from "@tanstack/react-router";
+import { ArrowBigDown, ArrowBigUp } from "lucide-react";
 
 function PostItem({
   node,
@@ -27,7 +21,7 @@ function PostItem({
     <Card className="p-0">
       <div className="flex gap-3 p-4">
         {/* Vote Component - Vertical Layout */}
-        <div className="flex flex-col items-center gap-1 min-w-[40px]">
+        <div className="flex flex-col items-center gap-1 min-w-10">
           <Button
             variant="ghost"
             size="icon-sm"
@@ -44,13 +38,15 @@ function PostItem({
               fill={node.voteStatus === 1 ? "currentColor" : "none"}
             />
           </Button>
-          <span className={`text-sm font-bold text-center ${
-            node.voteStatus === 1
-              ? "text-primary"
-              : node.voteStatus === -1
-                ? "text-destructive"
-                : "text-foreground"
-          }`}>
+          <span
+            className={`text-sm font-bold text-center ${
+              node.voteStatus === 1
+                ? "text-primary"
+                : node.voteStatus === -1
+                  ? "text-destructive"
+                  : "text-foreground"
+            }`}
+          >
             {node.points}
           </span>
           <Button
