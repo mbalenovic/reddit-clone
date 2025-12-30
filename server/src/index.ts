@@ -76,7 +76,7 @@ async function main() {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // ten years
         httpOnly: true,
         secure: !isDev,
-        sameSite: "none",
+        sameSite: isDev ? "lax" : "none",
       },
     }),
     express.json(),
