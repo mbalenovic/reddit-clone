@@ -292,7 +292,7 @@ export class UserService {
 - Issue with building the container [forum](https://forums.docker.com/t/docker-credential-desktop-exe-executable-file-not-found-in-path-using-wsl2/100225)
 - The second issue was "tsc not found" during build. The issue was missing typescript devDependency.
 - The third issue was creating initial migration. The final command was `npx typeorm-ts-node-commonjs migration:generate ./src/migrations/InitialMigration -d ./src/typeorm.config.ts` and it required process.env.DB_URL replaced with the string, synchronize turned off, and a fresh database without tables.
-- Added `app.set("proxy", 1)` to account for nginx
+- Added `app.set("trust proxy", 1)` to account for nginx
 - To push the image to Docker Hub repo, you have to name the tag after the repo name.
 
 #### December 28
@@ -305,6 +305,16 @@ export class UserService {
 - Opened a port `dokku ports:add http:80:8080` [link](https://dokku.com/docs/networking/port-management/?h=port)
 - Enabled SSL [link](https://github.com/dokku/dokku-letsencrypt)
 
+#### December 29
+
+- **4h THE END**:
+- Removed NitroV2Plugin from Tanstack Router that caused build failiure (no SSR)
+- A handy how-to for cookie debugging [link](https://github.com/benawad/how-to-debug-cookies/blob/master/README.md)
+- Redis inspection: `dokku redis:connect <redis-service-name>` to get inside redis-cli [link](https://github.com/dokku/dokku-redis)
+- Postgres inspection (get in psql):
+  - `dokku postgres:connect <postgres-service-name>`
+  - `docker exec -it <container_id> psql -U postgres`
+
 ### Integration Notes
 
 - Integrated Apollo Server with Express using [@as-integrations/express5](https://www.npmjs.com/package/@as-integrations/express5).
@@ -314,10 +324,10 @@ export class UserService {
 
 ### Actionables
 
-- [ ] Fix `.env` file to resolve `process.env.DB_PASSWORD = undefined`.
+- [x] Fix `.env` file to resolve `process.env.DB_PASSWORD = undefined`.
 - [ ] How to send and handle validation error messages and errors in general
 - [ ] Fix shadcn base styles/colors
-- [ ] Explore search params and dynamic routes (update-password.tsx)
+- [x] Explore search params and dynamic routes (update-password.tsx)
 - [ ] Handle database exceptions in ErrorInterceptor
 - [ ] isUser.ts breaks app if the user entity is imported from @/...
 - [ ] add Zod validation
