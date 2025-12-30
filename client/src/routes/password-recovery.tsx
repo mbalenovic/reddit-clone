@@ -2,6 +2,11 @@ import { FieldError } from "@/gql/graphql";
 import { usePasswordRecoveryMutation } from "@/graphql/mutations/usePasswordRecoveryMutation";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 
 export const Route = createFileRoute("/password-recovery")({
   component: RouteComponent,
@@ -36,41 +41,49 @@ function RouteComponent() {
   };
 
   return (
-    <div className="bg-gray-200 flex justify-center items-center h-screen ">
-      {isComplete ? (
-        <p>We sent you the reset email.</p>
-      ) : (
-        <form action="" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="email" className="block">
-              Email{" "}
-            </label>
-            <input
-              type="text"
-              name="email"
-              placeholder="email"
-              id="email"
-              required
-              className="bg-white rounded-sm p-2"
-            />
-          </div>
-          <div className="mt-2">
-            {errors.map((error) => (
-              <span className="text-red-400" aria-live="polite">
-                {error.message}
-              </span>
-            ))}
-          </div>
-          <div className="flex justify-center mt-4">
-            <input
-              type="submit"
-              disabled={isLoading}
-              value="Recover"
-              className="bg-red-300 p-1 px-3 rounded-sm"
-            />
-          </div>
-        </form>
-      )}
+    <div className="flex justify-center items-center min-h-[calc(100vh-theme(spacing.20))]">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Password Recovery</CardTitle>
+          <CardDescription>
+            Enter your email address and we'll send you a link to reset your password.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {isComplete ? (
+            <Alert>
+              <AlertDescription>
+                We sent you the reset email. Please check your inbox.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  type="email"
+                  name="email"
+                  placeholder="your@email.com"
+                  id="email"
+                  required
+                />
+              </div>
+              {errors.length > 0 && (
+                <Alert variant="destructive">
+                  <AlertDescription>
+                    {errors.map((error, index) => (
+                      <div key={index}>{error.message}</div>
+                    ))}
+                  </AlertDescription>
+                </Alert>
+              )}
+              <Button type="submit" disabled={isLoading} className="w-full">
+                {isLoading ? "Sending..." : "Send Recovery Email"}
+              </Button>
+            </form>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

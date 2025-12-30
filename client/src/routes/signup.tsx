@@ -3,6 +3,11 @@ import { CombinedGraphQLErrors } from "@apollo/client";
 import { useState } from "react";
 import { FieldError } from "@/gql/graphql";
 import { Route as IndexRoute } from "./posts/index";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export const Route = createFileRoute("/signup")({
   component: RouteComponent,
@@ -49,63 +54,58 @@ function RouteComponent() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen ">
-      <form action="" onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username" className="block">
-            Username
-          </label>
-          <input
-            type="text"
-            name="username"
-            placeholder="username"
-            id="username"
-            required
-            className="bg-white rounded-sm p-2"
-          />
-        </div>
-        <div className="mt-2">
-          <label htmlFor="username" className="block">
-            Email
-          </label>
-          <input
-            type="text"
-            name="email"
-            placeholder="email"
-            id="email"
-            required
-            className="bg-white rounded-sm p-2"
-          />
-        </div>
-        <div className="mt-2">
-          <label htmlFor="password" className="block">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            placeholder="password"
-            id="password"
-            required
-            className="bg-white rounded-sm p-2"
-          />
-        </div>
-        <div className="mt-2">
-          {errors.map((error) => (
-            <span className="text-red-400" aria-live="polite">
-              {error.message}
-            </span>
-          ))}
-        </div>
-        <div className="flex justify-center mt-4">
-          <input
-            type="submit"
-            disabled={isLoading}
-            value="Register"
-            className="bg-red-300 p-1 px-3 rounded-sm"
-          />
-        </div>
-      </form>
+    <div className="flex justify-center items-center min-h-[calc(100vh-theme(spacing.20))]">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Sign Up</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                type="text"
+                name="username"
+                placeholder="username"
+                id="username"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                type="email"
+                name="email"
+                placeholder="email"
+                id="email"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                type="password"
+                name="password"
+                placeholder="password"
+                id="password"
+                required
+              />
+            </div>
+            {errors.length > 0 && (
+              <Alert variant="destructive">
+                <AlertDescription>
+                  {errors.map((error, index) => (
+                    <div key={index}>{error.message}</div>
+                  ))}
+                </AlertDescription>
+              </Alert>
+            )}
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? "Creating account..." : "Sign Up"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

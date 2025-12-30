@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { PostsQuery } from "@/gql/graphql";
 import { useVoteMutation } from "@/graphql/mutations/useVoteMutation";
-import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
+import { ArrowBigDown, ArrowBigUp } from "lucide-react";
 import { Route as PostRoute } from "@/routes/posts/$postId";
 import { Link } from "@tanstack/react-router";
 
@@ -24,32 +24,68 @@ function PostItem({
   }
 
   return (
-    <Card className="mt-2">
-      <CardHeader>
-        <Link to={PostRoute.to} params={{ postId: node.id.toString() }}>
-          <CardTitle>{node.title + " by " + node.author.username}</CardTitle>
-        </Link>
-        <CardDescription>{node.text}</CardDescription>
-        <CardAction className="flex items-center">
+    <Card className="p-0">
+      <div className="flex gap-3 p-4">
+        {/* Vote Component - Vertical Layout */}
+        <div className="flex flex-col items-center gap-1 min-w-[40px]">
           <Button
+            variant="ghost"
+            size="icon-sm"
             aria-label="Upvote"
             onClick={() => handleVote(1)}
-            className={`${node.voteStatus === 1 ? "bg-red-500 hover:bg-red-500" : ""} w-6 h-6`}
+            className={
+              node.voteStatus === 1
+                ? "text-primary hover:text-primary hover:bg-primary/10 bg-primary/10"
+                : "text-muted-foreground hover:text-primary hover:bg-accent"
+            }
           >
-            <ArrowUpIcon />
+            <ArrowBigUp
+              className="size-5"
+              fill={node.voteStatus === 1 ? "currentColor" : "none"}
+            />
           </Button>
-          <Button variant="outline" size="icon-sm" className="m-1">
+          <span className={`text-sm font-bold text-center ${
+            node.voteStatus === 1
+              ? "text-primary"
+              : node.voteStatus === -1
+                ? "text-destructive"
+                : "text-foreground"
+          }`}>
             {node.points}
-          </Button>
+          </span>
           <Button
-            className={`${node.voteStatus === -1 ? "bg-red-500 hover:bg-red-500" : ""} w-6 h-6`}
+            variant="ghost"
+            size="icon-sm"
             aria-label="Downvote"
             onClick={() => handleVote(-1)}
+            className={
+              node.voteStatus === -1
+                ? "text-destructive hover:text-destructive hover:bg-destructive/10 bg-destructive/10"
+                : "text-muted-foreground hover:text-destructive hover:bg-accent"
+            }
           >
-            <ArrowDownIcon />
+            <ArrowBigDown
+              className="size-5"
+              fill={node.voteStatus === -1 ? "currentColor" : "none"}
+            />
           </Button>
-        </CardAction>
-      </CardHeader>
+        </div>
+
+        {/* Post Content */}
+        <div className="flex-1 min-w-0 space-y-1.5">
+          <Link to={PostRoute.to} params={{ postId: node.id.toString() }}>
+            <h3 className="font-semibold hover:text-primary transition-colors text-base leading-tight">
+              {node.title}
+            </h3>
+          </Link>
+          <p className="text-xs text-muted-foreground">
+            by {node.author.username}
+          </p>
+          <p className="line-clamp-3 text-sm text-muted-foreground">
+            {node.text}
+          </p>
+        </div>
+      </div>
     </Card>
   );
 }

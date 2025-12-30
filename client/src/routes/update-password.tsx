@@ -7,6 +7,11 @@ import {
 } from "@tanstack/react-router";
 import { useState } from "react";
 import { Route as SigninRoute } from "./signin";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 
 export const Route = createFileRoute("/update-password")({
   component: RouteComponent,
@@ -60,54 +65,51 @@ function RouteComponent() {
   };
 
   return (
-    <div className="bg-gray-200 flex justify-center items-center h-screen ">
-      <form action="" onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="password" className="block">
-            Password{" "}
-          </label>
-          <input
-            type="password"
-            name="password"
-            placeholder="password"
-            id="password"
-            required
-            className="bg-white rounded-sm p-2"
-          />
-        </div>
-        <div className="mt-2">
-          <label htmlFor="confirm-password" className="block">
-            Confirm password{" "}
-          </label>
-          <input
-            type="password"
-            name="confirm-password"
-            placeholder="Confirm password"
-            id="confirm-password"
-            required
-            className="bg-white rounded-sm p-2"
-          />
-        </div>
-        <div className="mt-2">
-          {errors.map((error) => (
-            <span
-              className="text-red-400"
-              aria-live="polite"
-              key={Math.random()}
-            >
-              {error.message}
-            </span>
-          ))}
-        </div>
-        <div className="flex justify-center mt-4">
-          <input
-            type="submit"
-            disabled={isLoading}
-            value="Update"
-            className="bg-red-300 p-1 px-3 rounded-sm"
-          />
-        </div>
-      </form>
+    <div className="flex justify-center items-center min-h-[calc(100vh-theme(spacing.20))]">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Update Password</CardTitle>
+          <CardDescription>
+            Enter your new password below.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="password">New Password</Label>
+              <Input
+                type="password"
+                name="password"
+                placeholder="Enter new password"
+                id="password"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirm-password">Confirm Password</Label>
+              <Input
+                type="password"
+                name="confirm-password"
+                placeholder="Confirm new password"
+                id="confirm-password"
+                required
+              />
+            </div>
+            {errors.length > 0 && (
+              <Alert variant="destructive">
+                <AlertDescription>
+                  {errors.map((error, index) => (
+                    <div key={index}>{error.message}</div>
+                  ))}
+                </AlertDescription>
+              </Alert>
+            )}
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? "Updating..." : "Update Password"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

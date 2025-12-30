@@ -9,6 +9,11 @@ import {
 import { useState } from "react";
 import { Route as IndexRoute } from "./posts/index";
 import { Route as PasswordRecoveryRoute } from "./password-recovery";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export const Route = createFileRoute("/signin")({
   component: RouteComponent,
@@ -55,55 +60,53 @@ function RouteComponent() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <form action="" onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username" className="block">
-            Username or email{" "}
-          </label>
-          <input
-            type="text"
-            name="username"
-            placeholder="username or email"
-            id="username"
-            required
-            className="bg-white rounded-sm p-2"
-          />
-        </div>
-        <div className="mt-2">
-          <label htmlFor="password" className="block">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            placeholder="password"
-            id="password"
-            required
-            className="bg-white rounded-sm p-2"
-          />
-          <div className="mt-1 flex justify-end">
-            <Link to={PasswordRecoveryRoute.to} className="text-xs">
-              Forgot password?
-            </Link>
-          </div>
-        </div>
-        <div className="mt-2">
-          {errors.map((error, index) => (
-            <span key={index} className="text-red-400" aria-live="polite">
-              {error.message}
-            </span>
-          ))}
-        </div>
-        <div className="flex justify-center mt-4">
-          <input
-            type="submit"
-            disabled={isLoading}
-            value="Sign In"
-            className="bg-red-300 p-1 px-3 rounded-sm"
-          />
-        </div>
-      </form>
+    <div className="flex justify-center items-center min-h-[calc(100vh-theme(spacing.20))]">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Sign In</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="username">Username or email</Label>
+              <Input
+                type="text"
+                name="username"
+                placeholder="username or email"
+                id="username"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                type="password"
+                name="password"
+                placeholder="password"
+                id="password"
+                required
+              />
+              <div className="flex justify-end">
+                <Link to={PasswordRecoveryRoute.to} className="text-xs text-muted-foreground hover:text-primary">
+                  Forgot password?
+                </Link>
+              </div>
+            </div>
+            {errors.length > 0 && (
+              <Alert variant="destructive">
+                <AlertDescription>
+                  {errors.map((error, index) => (
+                    <div key={index}>{error.message}</div>
+                  ))}
+                </AlertDescription>
+              </Alert>
+            )}
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? "Signing in..." : "Sign In"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

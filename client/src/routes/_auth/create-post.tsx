@@ -2,6 +2,11 @@ import { useCreatePostMutation } from "@/graphql/mutations/useCreatePostMutation
 import { CombinedGraphQLErrors } from "@apollo/client";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Route as IndexRoute } from "@/routes/__root";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 export const Route = createFileRoute("/_auth/create-post")({
   component: RouteComponent,
 });
@@ -32,44 +37,48 @@ function RouteComponent() {
   };
 
   return (
-    <div className="bg-gray-200 flex justify-center items-center h-screen ">
-      <form action="" onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="title" className="block">
-            title
-          </label>
-          <input
-            type="text"
-            name="title"
-            placeholder="title"
-            id="title"
-            required
-            className="bg-white rounded-sm p-2"
-          />
-        </div>
-        <div className="mt-2">
-          <label htmlFor="text" className="block">
-            Text
-          </label>
-          <textarea
-            name="text"
-            placeholder="text"
-            id="text"
-            required
-            className="bg-white rounded-sm p-2"
-            rows={3}
-          />
-          <div className="mt-1 flex justify-end"></div>
-        </div>
-        <div className="flex justify-center mt-4">
-          <input
-            type="submit"
-            disabled={loading}
-            value="Create"
-            className="bg-red-300 p-1 px-3 rounded-sm"
-          />
-        </div>
-      </form>
+    <div className="flex justify-center items-center min-h-[calc(100vh-theme(spacing.20))]">
+      <Card className="w-full max-w-2xl">
+        <CardHeader>
+          <CardTitle>Create Post</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                type="text"
+                name="title"
+                placeholder="Enter post title"
+                id="title"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="text">Text</Label>
+              <Textarea
+                name="text"
+                placeholder="Enter post content"
+                id="text"
+                required
+                rows={6}
+              />
+            </div>
+            <div className="flex gap-2 justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => navigate({ to: IndexRoute.to })}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? "Creating..." : "Create Post"}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -6,6 +6,8 @@ import { Route as PostsRoute } from "@/routes/posts/index";
 import { useState } from "react";
 import { useAuth } from "@/auth";
 import PostUpdateForm from "./(post)/components/post-update-form";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export const Route = createFileRoute("/posts/$postId")({
   // In a loader
@@ -34,10 +36,16 @@ function PostComponent() {
     setUpdateView((prev) => !prev);
   }
 
-  if (!data?.post) return <p>No post.</p>;
+  if (!data?.post) return (
+    <div className="max-w-2xl mx-auto py-8">
+      <Alert variant="destructive">
+        <AlertDescription>Post not found.</AlertDescription>
+      </Alert>
+    </div>
+  );
 
   return (
-    <div>
+    <div className="max-w-2xl mx-auto">
       {updateView ? (
         <PostUpdateForm
           title={data.post.title}
@@ -46,24 +54,32 @@ function PostComponent() {
           id={parseInt(postId)}
         />
       ) : (
-        <>
-          <h2>{data.post.title}</h2>
-          <p>{data.post.text}</p>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">{data.post.title}</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              by {data.post.author.username}
+            </p>
+          </CardHeader>
+          <CardContent>
+            <p className="whitespace-pre-wrap">{data.post.text}</p>
+          </CardContent>
           {user?.id === data.post.authorId && (
-            <>
-              <div className="mt-2">
-                <Button onClick={handleDelete}>Delete</Button>
-                {error && <p>Error deleting the post.</p>}
-                <Button
-                  onClick={handleUpdateView}
-                  className={`${!updateView && "ml-2"}`}
-                >
-                  Edit
-                </Button>
-              </div>
-            </>
+            <CardFooter className="gap-2">
+              <Button variant="outline" onClick={handleUpdateView}>
+                Edit
+              </Button>
+              <Button variant="destructive" onClick={handleDelete}>
+                Delete
+              </Button>
+              {error && (
+                <Alert variant="destructive" className="mt-4">
+                  <AlertDescription>Error deleting the post.</AlertDescription>
+                </Alert>
+              )}
+            </CardFooter>
           )}
-        </>
+        </Card>
       )}
     </div>
   );

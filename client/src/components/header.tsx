@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from "@radix-ui/react-dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const Header = () => {
   const auth = useAuth();
@@ -22,34 +23,51 @@ const Header = () => {
   }
 
   return (
-    <div className="flex justify-start items-center bg-teal-300 p-4 sticky top-0">
-      <Link to={PostsRoute.to}>Posts</Link>
+    <header className="flex justify-start items-center bg-primary text-primary-foreground px-6 py-3 sticky top-0 z-50 border-b border-border/40">
+      <Link to={PostsRoute.to}>
+        <Button variant="ghost" className="text-primary-foreground hover:bg-primary-foreground/10">
+          Posts
+        </Button>
+      </Link>
 
-      <div className="ml-auto">
+      <div className="ml-auto flex items-center gap-2">
         {auth.isAuthenticated ? (
           <DropdownMenu>
-            <DropdownMenuTrigger className="p-4">
-              {auth.user?.username}
-            </DropdownMenuTrigger>{" "}
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="text-primary-foreground hover:bg-primary-foreground/10">
+                {auth.user?.username}
+              </Button>
+            </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="p-4 bg-popover text-popover-foreground border border-border rounded-md shadow-md"
+              className="p-2 bg-popover text-popover-foreground border border-border rounded-md shadow-md"
               align="end"
             >
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+              <DropdownMenuLabel className="px-2 py-1.5 text-sm font-semibold">My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator className="h-px bg-border my-1" />
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="px-2 py-1.5 text-sm rounded-sm cursor-pointer hover:bg-accent hover:text-accent-foreground outline-none"
+              >
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
           <>
-            <Link to={SigninRoute.to}>Sign In</Link>
-            <Link to={SignupRoute.to} className="ml-4">
-              Sign Up
+            <Link to={SigninRoute.to}>
+              <Button variant="ghost" className="text-primary-foreground hover:bg-primary-foreground/10">
+                Sign In
+              </Button>
+            </Link>
+            <Link to={SignupRoute.to}>
+              <Button variant="default" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
+                Sign Up
+              </Button>
             </Link>
           </>
         )}
       </div>
-    </div>
+    </header>
   );
 };
 

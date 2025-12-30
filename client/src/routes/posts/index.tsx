@@ -21,23 +21,27 @@ function App() {
     });
   };
 
-  if (loading && !data) return <p>loading...</p>;
+  if (loading && !data) return (
+    <div className="max-w-2xl mx-auto text-center py-8">
+      <p className="text-muted-foreground">Loading posts...</p>
+    </div>
+  );
 
   return (
-    <>
-      <div className="flex">
-        <Button asChild className="ml-auto">
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div className="flex justify-end">
+        <Button asChild>
           <Link to={PostCreateRoute.to}>Create Post</Link>
         </Button>
       </div>
       <PostList edges={data?.posts.edges ?? []} />
       {data?.posts.pageInfo.hasNextPage && (
-        <div className="flex mt-4">
-          <Button className="m-auto" onClick={loadMore}>
-            load more
+        <div className="flex justify-center pt-2">
+          <Button variant="outline" onClick={loadMore}>
+            Load more
           </Button>
         </div>
       )}
-    </>
+    </div>
   );
 }

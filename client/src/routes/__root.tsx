@@ -11,11 +11,11 @@ interface MyRouterContext {
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <>
-      <div className="h-screen  bg-gray-100 overflow-y-auto">
+      <div className="min-h-screen bg-background text-foreground">
         <Header />
-        <div className="m-2 mb-5">
+        <main className="px-4 py-6">
           <Outlet />
-        </div>
+        </main>
       </div>
       <TanStackDevtools
         config={{
